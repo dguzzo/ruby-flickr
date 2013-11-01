@@ -76,9 +76,8 @@ class FlickrawBasic
           puts "Authentication failed : #{e.msg}"
       end
 
-    # p flickr.photos.licenses.getInfo
-        
 =begin
+    ## p flickr.photos.licenses.getInfo
       All Rights Reserved - 0
       Attribution License - 4
       Attribution-NoDerivs License - 6
@@ -92,6 +91,11 @@ class FlickrawBasic
       
       photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1)
       urls = photos.map do |p|
+          ## slow
+          # info = flickr.photos.getInfo(:photo_id => p['id'])
+          # FlickRaw.url_b(info)
+
+          ## fast
           "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
       end
       
@@ -99,7 +103,7 @@ class FlickrawBasic
       Utils.createDirIfNeeded(new_dir)
       Dir.chdir(new_dir)
       
-      urls[0..1].each do |url|
+      urls.each do |url|
          `wget '#{url}'` 
       end
 
