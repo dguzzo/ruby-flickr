@@ -15,5 +15,7 @@ images
 # Ignore other files
 /.rvmrc
 /.tmproj
+data
+images*
 
 .DS_Store

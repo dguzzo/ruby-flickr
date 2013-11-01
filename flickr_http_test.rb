@@ -5,6 +5,10 @@ require 'xmlsimple'
 require 'pp'
 require 'json'
 require './lib/utils'
+require 'pry'
+require 'pry-nav'
+
+require 'open-uri'
 
 class Flickr_API
 

@@ -1,7 +1,11 @@
 require 'flickraw'
+require 'pry'
+require 'pry-nav'
+require './lib/utils'
+
+LICENSE_ID = 3
 
 class FlickrawBasic
-
   attr_reader :token, :login
 
   def initialize
@@ -56,6 +60,52 @@ class FlickrawBasic
     
   end
 
+
+  def get_creative_common_faves
+      File.open('data/access_token.txt') do |f|
+          flickr.access_token = f.read
+      end
+      File.open('data/access_secret.txt') do |f|
+          flickr.access_secret = f.read
+      end
+      
+      begin
+          @login = flickr.test.login
+          puts "You are now authenticated as #{@login.username} with token #{flickr.access_token} and secret #{flickr.access_secret}"
+      rescue FlickRaw::FailedResponse => e
+          puts "Authentication failed : #{e.msg}"
+      end
+
+    # p flickr.photos.licenses.getInfo
+        
+=begin
+      All Rights Reserved - 0
+      Attribution License - 4
+      Attribution-NoDerivs License - 6
+      Attribution-NonCommercial-NoDerivs License - 3
+      Attribution-NonCommercial License - 2
+      Attribution-NonCommercial-ShareAlike License - 1
+      Attribution-ShareAlike License - 5
+      No known copyright restrictions - 7
+      United States Government Work - 8
+=end
+      
+      photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1)
+      urls = photos.map do |p|
+          "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
+      end
+      
+      new_dir = "images-license-#{LICENSE_ID}"
+      Utils.createDirIfNeeded(new_dir)
+      Dir.chdir(new_dir)
+      
+      urls[0..1].each do |url|
+         `wget '#{url}'` 
+      end
+
+  end
+
+
   private
   def ask_to_open(id)
     info = flickr.photos.getInfo(:photo_id => id)
@@ -67,6 +117,7 @@ class FlickrawBasic
 
 end
 
-# test = FlickrawBasic.new
+test = FlickrawBasic.new
+test.get_creative_common_faves
 # # test.get_recent
 # test.get_my_pubic_photos
