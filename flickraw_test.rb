@@ -86,26 +86,62 @@ class FlickrawBasic
 =end
 
     photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1)
+    
     urls = photos.map do |p|
       ## slow
-      # info = flickr.photos.getInfo(:photo_id => p['id'])
+      info = flickr.photos.getInfo(:photo_id => p['id'])
       # FlickRaw.url_b(info)
-
+      write_file_info(info)
+      
       ## fast
       "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
     end
 
+    # download_files_from_urls(urls)
+  end
+  
+  def download_files_from_urls(urls)
     new_dir = "images-license-#{LICENSE_ID}"
     Utils.createDirIfNeeded(new_dir)
     Dir.chdir(new_dir)
-
+    
     urls.each do |url|
       `wget '#{url}'` 
-    end
-
+    end    
   end
 
   private
+  # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
+  def sanitize_filename(filename)
+    filename.gsub(/[^0-9A-z.\-]/, '_')
+  end
+  
+  def write_file_info(photo)
+    info_dir = 'photo-info'
+    Utils.createDirIfNeeded(info_dir)
+    title = sanitize_filename(photo.title)
+    
+    File.open("#{info_dir}/#{title}.yml", 'w') do |file|
+      puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
+      file.write(custom_photo_info(photo).to_yaml)
+    end
+  end
+  
+  def custom_photo_info(photo)
+    {
+      "title" => photo.title,
+      "owner" => {
+        "username" => photo.owner.username,
+        "realname" => photo.owner.realname,
+        "nsid" => photo.owner.nsid,
+        "profile_page" => "http://www.flickr.com/photos/#{photo.owner.username}/"
+      },
+      "urls" => {
+        "photopage" => photo.urls.first._content
+      }
+    }
+  end
+  
   def set_local_auth
     flickr.access_token = Settings.authentication[:token][:access_token]
     flickr.access_secret = Settings.authentication[:token][:access_secret]
