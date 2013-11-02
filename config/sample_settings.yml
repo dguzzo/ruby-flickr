@@ -1,0 +1,7 @@
+---
+authentication:
+    api_key: <your-api-key-here>
+    shared_secret: <your-shared-secret-here>
+    token:
+        access_token: <access-token-here>
+        access_secret: <access-secret-here>
