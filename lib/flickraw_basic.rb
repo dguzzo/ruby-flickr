@@ -79,7 +79,7 @@ class FlickrawBasic
   United States Government Work - 8
 =end
 
-
+    puts "getting creative common faves..."
     photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 5)
     photos_info = []
     
