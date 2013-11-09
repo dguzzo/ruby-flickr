@@ -18,5 +18,6 @@ images
 config/settings.yml
 data
 images*
+photo-info
 
 .DS_Store

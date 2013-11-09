@@ -1,7 +1,8 @@
+puts Dir.pwd
 require 'flickraw'
 require 'pry'
 require 'pry-nav'
-require './lib/utils'
+require './lib/utils.rb'
 require './vendor/deep_symbolize.rb'
 require './vendor/settings.rb'
 require 'yaml'
@@ -97,7 +98,7 @@ class FlickrawBasic
       "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
     end
 
-    # download_files_from_urls(urls)
+    download_files_from_urls(urls)
   end
   
   def download_files_from_urls(urls)
@@ -168,8 +169,3 @@ class FlickrawBasic
   end
 
 end
-
-test = FlickrawBasic.new
-test.get_creative_common_faves
-# # test.get_recent
-# test.get_my_pubic_photos

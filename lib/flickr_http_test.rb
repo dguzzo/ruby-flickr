@@ -1,10 +1,9 @@
 # http test
-
 require 'net/http'
 require 'xmlsimple'
 require 'pp'
 require 'json'
-require './lib/utils'
+require './lib/utils.rb'
 require 'pry'
 require 'pry-nav'
 
