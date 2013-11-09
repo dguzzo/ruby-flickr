@@ -65,14 +65,7 @@ class FlickrawBasic
 
   def get_creative_common_faves
     set_local_auth
-
-    begin
-      @login = flickr.test.login
-      puts "You are now authenticated as #{@login.username} with token #{flickr.access_token} and secret #{flickr.access_secret}"
-    rescue FlickRaw::FailedResponse => e
-      puts "Authentication failed : #{e.msg}"
-    end
-
+    return unless @login
 =begin
   ## p flickr.photos.licenses.getInfo
   All Rights Reserved - 0
@@ -86,19 +79,24 @@ class FlickrawBasic
   United States Government Work - 8
 =end
 
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1)
+    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 3)
+    photos_info = []
     
     urls = photos.map do |p|
       ## slow
-      info = flickr.photos.getInfo(:photo_id => p['id'])
-      # FlickRaw.url_b(info)
-      write_file_info(info)
+      photos_info << flickr.photos.getInfo(:photo_id => p['id'])
+      photo_sizes = flickr.photos.getSizes(photo_id: p.id)
       
-      ## fast
-      "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
+      begin
+        photo_sizes.to_a.last.source
+      rescue => e
+        puts e
+        "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
+      end
     end
 
     download_files_from_urls(urls)
+    write_files_info(photos_info)
   end
   
   def get_untagged
@@ -114,19 +112,23 @@ class FlickrawBasic
   
   
   private
+  
   # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
   def sanitize_filename(filename)
     filename.gsub(/[^0-9A-z.\-]/, '_')
   end
   
-  def write_file_info(photo)
-    info_dir = 'photo-info'
-    Utils.createDirIfNeeded(info_dir)
-    title = sanitize_filename(photo.title)
-    
-    File.open("#{info_dir}/#{title}.yml", 'w') do |file|
-      puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
-      file.write(custom_photo_info(photo).to_yaml)
+  def write_files_info(photos_info)
+    photos_info.each do |photo|
+      info_dir = 'photo-info'
+      Utils.createDirIfNeeded(info_dir)
+      title = sanitize_filename(photo.title)
+
+      File.open("#{info_dir}/#{title}.yml", 'w') do |file|
+        puts Dir.pwd
+        puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
+        file.write(custom_photo_info(photo).to_yaml)
+      end
     end
   end
   
@@ -149,6 +151,12 @@ class FlickrawBasic
     flickr.access_token = Settings.authentication[:token][:access_token]
     flickr.access_secret = Settings.authentication[:token][:access_secret]
     flickr.access_token && flickr.access_secret
+    begin
+      @login = flickr.test.login
+      puts "You are now authenticated as #{@login.username} with token #{flickr.access_token} and secret #{flickr.access_secret}"
+    rescue FlickRaw::FailedResponse => e
+      puts "Authentication failed : #{e.msg}"
+    end
   end
 
   def set_basic_auth
@@ -173,11 +181,12 @@ class FlickrawBasic
   def download_files_from_urls(urls)
     new_dir = "images-license-#{LICENSE_ID}"
     Utils.createDirIfNeeded(new_dir)
-    Dir.chdir(new_dir)
-    
-    urls.each do |url|
-      `wget '#{url}'` 
-    end    
+
+    Dir.chdir(new_dir) do
+      urls.each do |url|
+        `wget --no-clobber '#{url}'`
+      end    
+    end
   end
 
 end
