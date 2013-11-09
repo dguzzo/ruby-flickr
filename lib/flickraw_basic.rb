@@ -96,7 +96,7 @@ class FlickrawBasic
     end
 
     download_files_from_urls(urls)
-    write_files_info(photos_info)
+    write_files_info(photos_info, urls)
   end
   
   def get_untagged
@@ -118,8 +118,8 @@ class FlickrawBasic
     filename.gsub(/[^0-9A-z.\-]/, '_')
   end
   
-  def write_files_info(photos_info)
-    photos_info.each do |photo|
+  def write_files_info(photos_info, urls)
+    photos_info.each_with_index do |photo, index|
       info_dir = 'photo-info'
       Utils.createDirIfNeeded(info_dir)
       title = sanitize_filename(photo.title)
@@ -127,12 +127,12 @@ class FlickrawBasic
       File.open("#{info_dir}/#{title}.yml", 'w') do |file|
         puts Dir.pwd
         puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
-        file.write(custom_photo_info(photo).to_yaml)
+        file.write(custom_photo_info(photo, urls[index]).to_yaml)
       end
     end
   end
   
-  def custom_photo_info(photo)
+  def custom_photo_info(photo, url)
     {
       "title" => photo.title,
       "owner" => {
@@ -142,7 +142,8 @@ class FlickrawBasic
         "profile_page" => "http://www.flickr.com/photos/#{photo.owner.username}/"
       },
       "urls" => {
-        "photopage" => photo.urls.first._content
+        "photopage" => photo.urls.first._content,
+        "largest_size" => url
       }
     }
   end
