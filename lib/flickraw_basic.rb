@@ -79,11 +79,12 @@ class FlickrawBasic
   United States Government Work - 8
 =end
 
-    puts "getting creative common faves..."
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 5)
+    print "getting creative common faves"
+    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 6)
     photos_info = []
     
     urls = photos.map do |p|
+      print "."
       photos_info << flickr.photos.getInfo(:photo_id => p['id'])
       photo_sizes = flickr.photos.getSizes(photo_id: p.id)
       
@@ -94,7 +95,8 @@ class FlickrawBasic
         "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
       end
     end
-
+    puts
+    
     fetch_files(urls, photos_info)
   end
   
