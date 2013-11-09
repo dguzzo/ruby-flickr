@@ -84,7 +84,6 @@ class FlickrawBasic
     photos_info = []
     
     urls = photos.map do |p|
-      ## slow
       photos_info << flickr.photos.getInfo(:photo_id => p['id'])
       photo_sizes = flickr.photos.getSizes(photo_id: p.id)
       
