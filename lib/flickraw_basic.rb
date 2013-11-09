@@ -79,7 +79,8 @@ class FlickrawBasic
   United States Government Work - 8
 =end
 
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 3)
+
+    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 5)
     photos_info = []
     
     urls = photos.map do |p|
@@ -95,8 +96,7 @@ class FlickrawBasic
       end
     end
 
-    download_files_from_urls(urls)
-    write_files_info(photos_info, urls)
+    fetch_files(urls, photos_info)
   end
   
   def get_untagged
@@ -120,11 +120,11 @@ class FlickrawBasic
   
   def write_files_info(photos_info, urls)
     photos_info.each_with_index do |photo, index|
-      info_dir = 'photo-info'
-      Utils.createDirIfNeeded(info_dir)
+      info_dir = nil #'photo-info/'
+      Utils.createDirIfNeeded(info_dir) if info_dir
       title = sanitize_filename(photo.title)
 
-      File.open("#{info_dir}/#{title}.yml", 'w') do |file|
+      File.open("#{info_dir}#{title}.yml", 'w') do |file|
         puts Dir.pwd
         puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
         file.write(custom_photo_info(photo, urls[index]).to_yaml)
@@ -134,7 +134,10 @@ class FlickrawBasic
   
   def custom_photo_info(photo, url)
     {
-      "title" => photo.title,
+      "titles" => {
+        "original" => photo.title,
+        "sanitized" => sanitize_filename(photo.title)
+      },
       "owner" => {
         "username" => photo.owner.username,
         "realname" => photo.owner.realname,
@@ -179,14 +182,16 @@ class FlickrawBasic
       puts "loaded settings"
   end
 
-  def download_files_from_urls(urls)
+  def fetch_files(urls, photos_info)
     new_dir = "images-license-#{LICENSE_ID}"
     Utils.createDirIfNeeded(new_dir)
 
     Dir.chdir(new_dir) do
-      urls.each do |url|
-        `wget --no-clobber '#{url}'`
-      end    
+      urls.each_with_index do |url, index|
+        download_name = sanitize_filename(photos_info[index].title) + ".jpg"
+        `wget --no-clobber -O '#{download_name}' '#{url}'`
+      end
+      write_files_info(photos_info, urls) 
     end
   end
 
