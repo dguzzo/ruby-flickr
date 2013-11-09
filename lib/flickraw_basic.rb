@@ -101,16 +101,18 @@ class FlickrawBasic
     download_files_from_urls(urls)
   end
   
-  def download_files_from_urls(urls)
-    new_dir = "images-license-#{LICENSE_ID}"
-    Utils.createDirIfNeeded(new_dir)
-    Dir.chdir(new_dir)
+  def get_untagged
+    set_local_auth
+    untagged = flickr.photos.getUntagged
     
-    urls.each do |url|
-      `wget '#{url}'` 
-    end    
+    Utils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
+    
+    untagged.each do |photo|
+      puts photo.title
+    end
   end
-
+  
+  
   private
   # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
   def sanitize_filename(filename)
@@ -166,6 +168,16 @@ class FlickrawBasic
   def load_settings
       Settings.load!("config/settings.yml")
       puts "loaded settings"
+  end
+
+  def download_files_from_urls(urls)
+    new_dir = "images-license-#{LICENSE_ID}"
+    Utils.createDirIfNeeded(new_dir)
+    Dir.chdir(new_dir)
+    
+    urls.each do |url|
+      `wget '#{url}'` 
+    end    
   end
 
 end

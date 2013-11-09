@@ -12,6 +12,19 @@ module Utils
     def self.red(message)
       "\e[1;31m#{message}\e[0m"
     end
+    
+    def self.green_out(message)
+      puts "\e[1;32m#{message}\e[0m"
+    end
+
+    def self.yellow_out(message)
+      puts "\e[1;33m#{message}\e[0m"
+    end
+
+    def self.red_out(message)
+      puts "\e[1;31m#{message}\e[0m"
+    end
+    
   end
 
   def self.createDirIfNeeded(image_dir_name)
