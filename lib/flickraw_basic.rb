@@ -71,9 +71,7 @@ class FlickrawBasic
 
     puts info.title           # => "PICT986"
     puts info.dates.taken     # => "2006-07-06 15:16:18"
-
   end
-
 
   def get_creative_common_faves(page = 1)
     set_local_auth
@@ -115,7 +113,7 @@ class FlickrawBasic
     end
   end
   
-  
+  #########
   private
   
   # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
@@ -209,5 +207,4 @@ class FlickrawBasic
       write_files_info(photos_info, urls) 
     end
   end
-
 end
