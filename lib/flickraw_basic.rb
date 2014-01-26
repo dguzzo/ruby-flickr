@@ -19,7 +19,7 @@ require 'yaml'
   No known copyright restrictions - 7
   United States Government Work - 8
 =end
-LICENSE_ID = 3
+LICENSE_ID = 2
 
 class FlickrawBasic
   attr_reader :token, :login
@@ -80,7 +80,7 @@ class FlickrawBasic
     return unless @login
 
     print "getting creative common faves"
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 40, page: page)
+    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 50, page: page)
     photos_info = []
 
     if photos.to_a.empty?
@@ -128,7 +128,7 @@ class FlickrawBasic
       info_dir = nil #'photo-info/'
       Utils.createDirIfNeeded(info_dir) if info_dir
       title = sanitize_filename(photo.title)
-      file_path = "{info_dir}#{title}.yml"
+      file_path = "#{info_dir}#{title}.yml"
       
       if File.exists?(file_path)
         puts "skipping file-write #{file_path}; it already exists"
@@ -159,9 +159,9 @@ class FlickrawBasic
         "largest_size" => url
       },
       "flickr_annotation" => {
-          "flickr title" => photo.title,
-          "flickr title - photo page" => "#{photo.title} - #{photo.urls.first._content}",
-          "username - profile page" => photo.owner.username + " - http://www.flickr.com/photos/#{photo.owner.username}/",
+        "flickr_title" => photo.title,
+        "flickr_title_photo_page" => "#{photo.title} - #{photo.urls.first._content}",
+        "username_profile_page" => photo.owner.username + " - http://www.flickr.com/photos/#{photo.owner.username}/",
       }
     }
   end
