@@ -75,29 +75,33 @@ class FlickrawBasic
   end
 
 
-  def get_creative_common_faves
+  def get_creative_common_faves(page = 1)
     set_local_auth
     return unless @login
 
     print "getting creative common faves"
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 40)
+    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 40, page: page)
     photos_info = []
-    
-    urls = photos.map do |p|
-      print "."
-      photos_info << flickr.photos.getInfo(:photo_id => p['id'])
-      photo_sizes = flickr.photos.getSizes(photo_id: p.id)
-      
-      begin
-        photo_sizes.to_a.last.source
-      rescue => e
-        puts e
-        "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
+
+    if photos.to_a.empty?
+      puts "\nzero files found in search; exiting."
+    else
+      urls = photos.map do |p|
+        print "."
+        photos_info << flickr.photos.getInfo(:photo_id => p['id'])
+        photo_sizes = flickr.photos.getSizes(photo_id: p.id)
+
+        begin
+          photo_sizes.to_a.last.source
+        rescue => e
+          puts e
+          "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
+        end
       end
+      puts
+
+      fetch_files(urls, photos_info)
     end
-    puts
-    
-    fetch_files(urls, photos_info)
   end
   
   def get_untagged
@@ -124,11 +128,16 @@ class FlickrawBasic
       info_dir = nil #'photo-info/'
       Utils.createDirIfNeeded(info_dir) if info_dir
       title = sanitize_filename(photo.title)
-
-      File.open("#{info_dir}#{title}.yml", 'w') do |file|
-        puts Dir.pwd
-        puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
-        file.write(custom_photo_info(photo, urls[index]).to_yaml)
+      file_path = "{info_dir}#{title}.yml"
+      
+      if File.exists?(file_path)
+        puts "skipping file-write #{file_path}; it already exists"
+      else
+        File.open(file_path, 'w') do |file|
+          puts Dir.pwd
+          puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
+          file.write(custom_photo_info(photo, urls[index]).to_yaml)
+        end
       end
     end
   end
