@@ -1,11 +1,12 @@
 require 'spec_helper'
 require 'flickraw'
+require_relative '../vendor/deep_symbolize.rb'
+require_relative '../vendor/settings.rb'
 require_relative '../lib/flickraw_basic.rb'
 
 describe "ruby_flickr" do
     describe "set_basic_auth" do
         flickraw_basic = nil
-        Settings = {}
 
         before do
           Settings::stub(:load!)
@@ -31,5 +32,13 @@ describe "ruby_flickr" do
           FlickRaw.shared_secret.should eq('fake-shared-secret')
           FlickRaw.api_key.should be_nil
         end
+    end
+    
+    describe "load_settings" do
+      it "should call Settings.load!" do
+        Settings::stub(:authentication).and_return({:api_key => 'fake-api-key', :shared_secret => "fake-shared-secret"})
+        Settings.should_receive(:load!)
+        flickraw_basic = FlickrawBasic.new
+      end
     end
 end

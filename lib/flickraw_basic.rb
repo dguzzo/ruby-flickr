@@ -191,8 +191,8 @@ class FlickrawBasic
   end
 
   def load_settings
-      Settings.load!("config/settings.yml")
-      puts "loaded settings"
+    Settings.load!("config/settings.yml")
+    puts "loaded settings"
   end
 
   def fetch_files(urls, photos_info)
