@@ -21,3 +21,4 @@ images*
 photo-info
 
 .DS_Store
+*.tmproj
