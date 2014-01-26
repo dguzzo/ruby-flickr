@@ -7,6 +7,18 @@ require './vendor/deep_symbolize.rb'
 require './vendor/settings.rb'
 require 'yaml'
 
+=begin
+  ## p flickr.photos.licenses.getInfo
+  All Rights Reserved - 0
+  Attribution License - 4
+  Attribution-NoDerivs License - 6
+  Attribution-NonCommercial-NoDerivs License - 3
+  Attribution-NonCommercial License - 2
+  Attribution-NonCommercial-ShareAlike License - 1
+  Attribution-ShareAlike License - 5
+  No known copyright restrictions - 7
+  United States Government Work - 8
+=end
 LICENSE_ID = 3
 
 class FlickrawBasic
@@ -66,21 +78,9 @@ class FlickrawBasic
   def get_creative_common_faves
     set_local_auth
     return unless @login
-=begin
-  ## p flickr.photos.licenses.getInfo
-  All Rights Reserved - 0
-  Attribution License - 4
-  Attribution-NoDerivs License - 6
-  Attribution-NonCommercial-NoDerivs License - 3
-  Attribution-NonCommercial License - 2
-  Attribution-NonCommercial-ShareAlike License - 1
-  Attribution-ShareAlike License - 5
-  No known copyright restrictions - 7
-  United States Government Work - 8
-=end
 
     print "getting creative common faves"
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 6)
+    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 40)
     photos_info = []
     
     urls = photos.map do |p|
@@ -148,6 +148,11 @@ class FlickrawBasic
       "urls" => {
         "photopage" => photo.urls.first._content,
         "largest_size" => url
+      },
+      "flickr_annotation" => {
+          "flickr title" => photo.title,
+          "flickr title - photo page" => "#{photo.title} - #{photo.urls.first._content}",
+          "username - profile page" => photo.owner.username + " - http://www.flickr.com/photos/#{photo.owner.username}/",
       }
     }
   end
@@ -184,7 +189,7 @@ class FlickrawBasic
   end
 
   def fetch_files(urls, photos_info)
-    new_dir = "images-license-#{LICENSE_ID}"
+    new_dir = "assets/images-license-#{LICENSE_ID}"
     Utils.createDirIfNeeded(new_dir)
 
     Dir.chdir(new_dir) do
