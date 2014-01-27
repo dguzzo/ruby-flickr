@@ -70,26 +70,4 @@ describe "ruby_flickr" do
       end
     end
     
-    describe "getting photos" do
-      flickraw_basic = nil
-      before :each do
-        flickraw_basic = FlickrawBasic.new
-      end
-
-      it "getting untagged photos sets local auth" do
-        flickraw_basic = FlickrawBasic.new
-        flickraw_basic::stub(:set_local_auth)
-        flickr.photos::stub(:getUntagged) # stub flickraw's call to the flickr API
-        flickraw_basic.should_receive(:set_local_auth)
-        flickraw_basic.get_untagged
-      end
-      
-      it "getting untagged photos doesn't break if zero photos are returned" do
-        flickraw_basic = FlickrawBasic.new
-        flickraw_basic::stub(:set_local_auth)
-        flickr.photos::stub(:getUntagged).and_return([])
-        expect { flickraw_basic.get_untagged }.to_not raise_error
-      end
-
-    end
 end
