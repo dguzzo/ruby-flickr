@@ -106,10 +106,13 @@ class FlickrawBasic
     set_local_auth
     untagged = flickr.photos.getUntagged
     
-    Utils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
-    
-    untagged.each do |photo|
-      puts photo.title
+    if untagged
+      Utils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
+      unless untagged.empty?
+        untagged.each { |photo| puts photo.title }
+      end
+    else
+      Utils::ColorPrint::red_out("there was a problem with the flickr.photos.getUntagged call")
     end
   end
   
@@ -118,6 +121,11 @@ class FlickrawBasic
   
   # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
   def sanitize_filename(filename)
+    if !filename.is_a?(String) || filename.empty?
+      badname = "bad-file-name"
+      Utils::ColorPrint::red_out("unreadable filename; can't sanitize. file being written with title: #{badname}" )
+      return badname
+    end
     filename.gsub(/[^0-9A-z.\-]/, '_')
   end
   
