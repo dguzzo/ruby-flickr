@@ -7,6 +7,18 @@ require './vendor/deep_symbolize.rb'
 require './vendor/settings.rb'
 require 'yaml'
 
+=begin
+  ## p flickr.photos.licenses.getInfo
+  All Rights Reserved - 0
+  Attribution License - 4
+  Attribution-NoDerivs License - 6
+  Attribution-NonCommercial-NoDerivs License - 3
+  Attribution-NonCommercial License - 2
+  Attribution-NonCommercial-ShareAlike License - 1
+  Attribution-ShareAlike License - 5
+  No known copyright restrictions - 7
+  United States Government Work - 8
+=end
 LICENSE_ID = 3
 
 class FlickrawBasic
@@ -66,21 +78,9 @@ class FlickrawBasic
   def get_creative_common_faves
     set_local_auth
     return unless @login
-=begin
-  ## p flickr.photos.licenses.getInfo
-  All Rights Reserved - 0
-  Attribution License - 4
-  Attribution-NoDerivs License - 6
-  Attribution-NonCommercial-NoDerivs License - 3
-  Attribution-NonCommercial License - 2
-  Attribution-NonCommercial-ShareAlike License - 1
-  Attribution-ShareAlike License - 5
-  No known copyright restrictions - 7
-  United States Government Work - 8
-=end
 
     print "getting creative common faves"
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 6)
+    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 40)
     photos_info = []
     
     urls = photos.map do |p|
