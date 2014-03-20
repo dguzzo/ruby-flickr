@@ -19,7 +19,8 @@ require 'yaml'
   No known copyright restrictions - 7
   United States Government Work - 8
 =end
-LICENSE_ID = 3
+
+LICENSE_ID = 2
 
 class FlickrawBasic
   attr_reader :token, :login
@@ -71,51 +72,62 @@ class FlickrawBasic
 
     puts info.title           # => "PICT986"
     puts info.dates.taken     # => "2006-07-06 15:16:18"
-
   end
 
-
-  def get_creative_common_faves
+  def get_creative_common_faves(page = 1)
     set_local_auth
     return unless @login
 
     print "getting creative common faves"
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 40)
+
+    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 50, page: page)
     photos_info = []
-    
-    urls = photos.map do |p|
-      print "."
-      photos_info << flickr.photos.getInfo(:photo_id => p['id'])
-      photo_sizes = flickr.photos.getSizes(photo_id: p.id)
-      
-      begin
-        photo_sizes.to_a.last.source
-      rescue => e
-        puts e
-        "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
+
+    if photos.to_a.empty?
+      puts "\nzero files found in search; exiting."
+    else
+      urls = photos.map do |p|
+        print "."
+        photos_info << flickr.photos.getInfo(:photo_id => p['id'])
+        photo_sizes = flickr.photos.getSizes(photo_id: p.id)
+
+        begin
+          photo_sizes.to_a.last.source
+        rescue => e
+          puts e
+          "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
+        end
       end
+      puts
+
+      fetch_files(urls, photos_info)
     end
-    puts
-    
-    fetch_files(urls, photos_info)
   end
   
+  # currently just spits out titles of untagged photos
   def get_untagged
     set_local_auth
     untagged = flickr.photos.getUntagged
-    
-    Utils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
-    
-    untagged.each do |photo|
-      puts photo.title
+
+    if untagged
+      Utils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
+      untagged.each { |photo| puts photo.title } unless untagged.empty?
+      untagged.length
+    else
+      Utils::ColorPrint::red_out("there was a problem with the flickr.photos.getUntagged call")
     end
   end
   
-  
+  #########
   private
   
   # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
   def sanitize_filename(filename)
+    if !filename.is_a?(String) || filename.empty?
+      badname = "bad-file-name"
+      Utils::ColorPrint::red_out("unreadable filename; can't sanitize. file being written with title: #{badname}" )
+      return badname
+    end
     filename.gsub(/[^0-9A-z.\-]/, '_')
   end
   
@@ -124,11 +136,16 @@ class FlickrawBasic
       info_dir = nil #'photo-info/'
       Utils.createDirIfNeeded(info_dir) if info_dir
       title = sanitize_filename(photo.title)
-
-      File.open("#{info_dir}#{title}.yml", 'w') do |file|
-        puts Dir.pwd
-        puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
-        file.write(custom_photo_info(photo, urls[index]).to_yaml)
+      file_path = "#{info_dir}#{title}.yml"
+      
+      if File.exists?(file_path)
+        puts "skipping file-write #{file_path}; it already exists"
+      else
+        File.open(file_path, 'w') do |file|
+          puts Dir.pwd
+          puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
+          file.write(custom_photo_info(photo, urls[index]).to_yaml)
+        end
       end
     end
   end
@@ -148,6 +165,11 @@ class FlickrawBasic
       "urls" => {
         "photopage" => photo.urls.first._content,
         "largest_size" => url
+      },
+      "flickr_annotation" => {
+        "flickr_title" => photo.title,
+        "flickr_title_photo_page" => "#{photo.title} - #{photo.urls.first._content}",
+        "username_profile_page" => photo.owner.username + " - http://www.flickr.com/photos/#{photo.owner.username}/",
       }
     }
   end
@@ -179,12 +201,12 @@ class FlickrawBasic
   end
 
   def load_settings
-      Settings.load!("config/settings.yml")
-      puts "loaded settings"
+    Settings.load!("config/settings.yml")
+    puts "loaded settings"
   end
 
   def fetch_files(urls, photos_info)
-    new_dir = "images-license-#{LICENSE_ID}"
+    new_dir = "assets/images-license-#{LICENSE_ID}"
     Utils.createDirIfNeeded(new_dir)
 
     Dir.chdir(new_dir) do
@@ -195,5 +217,4 @@ class FlickrawBasic
       write_files_info(photos_info, urls) 
     end
   end
-
 end
