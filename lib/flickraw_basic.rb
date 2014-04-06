@@ -20,16 +20,16 @@ require 'yaml'
 =end
 
 LICENSE_TEXT = {
-    "0" => "All Rights Reserved",
-    "4" => "Attribution License",
-    "6" => "Attribution-NoDerivs License",
-    "3" => "Attribution-NonCommercial-NoDerivs License",
-    "2" => "Attribution-NonCommercial License",
-    "1" => "Attribution-NonCommercial-ShareAlike License",
-    "5" => "Attribution-ShareAlike License",
-    "7" => "No known copyright restrictions",
-    "8" => "United States Government Work",
-}
+    0 => "All Rights Reserved",
+    4 => "Attribution License",
+    6 => "Attribution-NoDerivs License",
+    3 => "Attribution-NonCommercial-NoDerivs License",
+    2 => "Attribution-NonCommercial License",
+    1 => "Attribution-NonCommercial-ShareAlike License",
+    5 => "Attribution-ShareAlike License",
+    7 => "No known copyright restrictions",
+    8 => "United States Government Work",
+}.freeze
 
 LICENSE_ID = 5
 PER_PAGE = 10
@@ -90,7 +90,7 @@ class FlickrawBasic
     set_local_auth
     return unless @login
 
-    print "getting up to #{Utils::ColorPrint::green(PER_PAGE)} creative common favorites with #{Utils::ColorPrint::green(LICENSE_TEXT[LICENSE_ID.to_s])} license..."
+    print "getting up to #{Utils::ColorPrint::green(PER_PAGE)} creative common favorites with #{Utils::ColorPrint::green(LICENSE_TEXT[LICENSE_ID])} license..."
 
     photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: PER_PAGE, page: page)
     photos_info = []
