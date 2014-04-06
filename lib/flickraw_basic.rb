@@ -1,10 +1,9 @@
-puts Dir.pwd
 require 'flickraw'
 require 'pry'
 require 'pry-nav'
-require './lib/utils.rb'
-require './vendor/deep_symbolize.rb'
-require './vendor/settings.rb'
+require './lib/utils'
+require './vendor/deep_symbolize'
+require './vendor/settings'
 require 'yaml'
 
 =begin
@@ -21,6 +20,7 @@ require 'yaml'
 =end
 
 LICENSE_ID = 2
+PER_PAGE = 100
 
 class FlickrawBasic
   attr_reader :token, :login
@@ -78,14 +78,15 @@ class FlickrawBasic
     set_local_auth
     return unless @login
 
-    print "getting creative common faves"
+    print "getting up to #{Utils::ColorPrint::green(PER_PAGE)} creative common faves"
 
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: 50, page: page)
+    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: PER_PAGE, page: page)
     photos_info = []
 
     if photos.to_a.empty?
-      puts "\nzero files found in search; exiting."
+      puts "\nzero photos found in search; exiting."
     else
+        puts "\nfound #{photos.to_a.length} photos. fetching each...\n"
       urls = photos.map do |p|
         print "."
         photos_info << flickr.photos.getInfo(:photo_id => p['id'])
@@ -123,12 +124,14 @@ class FlickrawBasic
   
   # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
   def sanitize_filename(filename)
-    if !filename.is_a?(String) || filename.empty?
-      badname = "bad-file-name"
-      Utils::ColorPrint::red_out("unreadable filename; can't sanitize. file being written with title: #{badname}" )
-      return badname
-    end
-    filename.gsub(/[^0-9A-z.\-]/, '_')
+      if !filename.is_a?(String)
+          badname = "bad-file-name"
+          Utils::ColorPrint::red_out("unreadable filename; can't sanitize. file being written with title: #{badname}" )
+          return badname
+      elsif filename.empty?
+          return ""
+      end
+      filename.gsub(/[^0-9A-z.\-]/, '_')
   end
   
   def write_files_info(photos_info, urls)

@@ -59,10 +59,12 @@ describe "ruby_flickr" do
         flickraw_basic.send(:sanitize_filename, "something@with!stuff").should eq("something_with_stuff")
       end
       
-      it "returns a default title for a bad or missing filename" do
-        
-        flickraw_basic.send(:sanitize_filename, nil).should eq("bad-file-name")
-        flickraw_basic.send(:sanitize_filename, "").should eq("bad-file-name")
+      it "returns a canned title for a bad filename" do
+          flickraw_basic.send(:sanitize_filename, nil).should eq("bad-file-name")
+      end
+      
+      it "returns 'untitled' for a missing filename" do
+          flickraw_basic.send(:sanitize_filename, "").should eq("")
       end
       
       it "should throw if no filename is passed" do
