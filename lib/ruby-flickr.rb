@@ -31,16 +31,16 @@ LICENSE_TEXT = {
     8 => "United States Government Work",
 }.freeze
 
-LICENSE_ID = 5
 PER_PAGE = 10
 
 class RubyFlickr
   attr_reader :token, :login
 
-  def initialize
+  def initialize(license = 5)
     load_settings
     set_basic_auth
     @token, @login = nil
+    @license = license
   end
 
   def get_recent
@@ -90,9 +90,9 @@ class RubyFlickr
     set_local_auth
     return unless @login
 
-    print "getting up to #{Utils::ColorPrint::green(PER_PAGE)} creative common favorites with #{Utils::ColorPrint::green(LICENSE_TEXT[LICENSE_ID])} license..."
+    print "getting up to #{Utils::ColorPrint::green(PER_PAGE)} creative common favorites with #{Utils::ColorPrint::green(LICENSE_TEXT[@license])} license..."
 
-    photos = flickr.photos.search(:user_id => 'me', :license => LICENSE_ID, :faves => 1, per_page: PER_PAGE, page: page)
+    photos = flickr.photos.search(:user_id => 'me', :license => @license, :faves => 1, per_page: PER_PAGE, page: page)
     photos_info = []
 
     if photos.to_a.empty?
@@ -221,7 +221,7 @@ class RubyFlickr
   end
 
   def fetch_files(urls, photos_info)
-    new_dir = "assets/images-license-#{LICENSE_ID}"
+    new_dir = "assets/images-license-#{@license}"
     Utils.createDirIfNeeded(new_dir)
 
     Dir.chdir(new_dir) do
