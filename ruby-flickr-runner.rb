@@ -1,6 +1,6 @@
-require './lib/ruby-flickr'
+require 'ruby-flickr'
 
-test = FlickrawBasic.new
+test = RubyFlickr.new
 test.get_creative_common_faves
 # test.get_untagged
 # test.get_recent

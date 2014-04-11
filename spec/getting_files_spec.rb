@@ -5,7 +5,7 @@ require 'ruby-flickr'
 describe "getting photos" do
   flickraw_basic = nil
   before :each do
-    flickraw_basic = FlickrawBasic.new
+    flickraw_basic = RubyFlickr.new
   end
 
   xit "getting untagged photos sets local auth" do

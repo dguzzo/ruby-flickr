@@ -34,7 +34,7 @@ LICENSE_TEXT = {
 LICENSE_ID = 5
 PER_PAGE = 10
 
-class FlickrawBasic
+class RubyFlickr
   attr_reader :token, :login
 
   def initialize

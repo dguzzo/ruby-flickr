@@ -2,7 +2,7 @@ require './lib/ruby-flickr/version'
 
 Gem::Specification.new do |s|
     s.name = 'ruby-flickr'
-    s.version = FlickrawBasic::VERSION
+    s.version = RubyFlickr::VERSION
     s.summary = 'Use FlickRaw gem (or not) to access Flickr API.'
     s.authors = ['Dominick Guzzo']
     
