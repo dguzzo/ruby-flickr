@@ -216,8 +216,9 @@ class RubyFlickr
   end
 
   def load_settings
-    Settings.load!("config/settings.yml")
-    puts "loaded settings"
+      filename = "config/ruby-flickr-settings.yml"
+      Settings.load!(filename)
+      puts "loaded settings at #{filename}"
   end
 
   def fetch_files(urls, photos_info)
