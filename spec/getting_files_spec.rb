@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'flickraw'
-require_relative '../lib/flickraw_basic.rb'
+require 'ruby-flickr'
 
 describe "getting photos" do
   flickraw_basic = nil

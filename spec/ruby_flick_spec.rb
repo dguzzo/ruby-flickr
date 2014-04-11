@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'flickraw'
-require_relative '../vendor/deep_symbolize.rb'
-require_relative '../vendor/settings.rb'
-require_relative '../lib/flickraw_basic.rb'
+require './vendor/deep_symbolize'
+require './vendor/settings'
+require 'ruby-flickr'
 
 describe "ruby_flickr" do
     describe "set_basic_auth" do

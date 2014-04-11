@@ -22,3 +22,5 @@ photo-info
 
 .DS_Store
 *.tmproj
+
+BUILD_NOTES.md

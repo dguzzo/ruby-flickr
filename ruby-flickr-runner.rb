@@ -1,4 +1,4 @@
-require './lib/flickraw_basic.rb'
+require './lib/ruby-flickr'
 
 test = FlickrawBasic.new
 test.get_creative_common_faves

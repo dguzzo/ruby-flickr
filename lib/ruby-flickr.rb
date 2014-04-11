@@ -1,7 +1,7 @@
 require 'flickraw'
 require 'pry'
 require 'pry-nav'
-require './lib/utils'
+require 'ruby-flickr/utils'
 require './vendor/deep_symbolize'
 require './vendor/settings'
 require 'yaml'
