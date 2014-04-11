@@ -15,7 +15,7 @@ images
 # Ignore other files
 /.rvmrc
 /.tmproj
-config/settings.yml
+config/*.yml
 data
 images*
 photo-info
