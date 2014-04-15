@@ -59,7 +59,7 @@ class RubyFlickr
     ask_to_open(id)
   end
 
-  def get_my_pubic_photos
+  def get_my_public_photos
     @token = flickr.get_request_token
     auth_url = flickr.get_authorize_url(@token['oauth_token'], :perms => 'delete')
 

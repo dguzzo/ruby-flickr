@@ -34,4 +34,16 @@ namespace :creative_commons do
         test = RubyFlickr.new
         test.get_untagged
     end
+    
+    desc "get recent photos"
+    task :get_recent do
+        test = RubyFlickr.new
+        test.get_recent
+    end
+    
+    desc "get my public photos"
+    task :get_my_public_photos do
+        test = RubyFlickr.new
+        test.get_my_public_photos
+    end
 end
