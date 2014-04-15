@@ -117,14 +117,19 @@ class RubyFlickr
     end
   end
   
-  # currently just spits out titles of untagged photos
+  # prints out titles of untagged photos
   def get_untagged
     set_local_auth
     untagged = flickr.photos.getUntagged
 
     if untagged
       Utils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
-      untagged.each { |photo| puts photo.title } unless untagged.empty?
+      
+      untagged.each do |photo|
+          photo_info = flickr.photos.getInfo(:photo_id => photo['id'])
+          puts "#{photo.title} - #{photo_info.urls.first._content}"
+      end
+      
       untagged.length
     else
       Utils::ColorPrint::red_out("there was a problem with the flickr.photos.getUntagged call")

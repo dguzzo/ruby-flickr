@@ -24,3 +24,5 @@ photo-info
 *.tmproj
 
 BUILD_NOTES.md
+
+*.gem

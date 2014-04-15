@@ -5,6 +5,7 @@ Gem::Specification.new do |s|
     s.version = RubyFlickr::VERSION
     s.summary = 'Use FlickRaw gem (or not) to access Flickr API.'
     s.authors = ['Dominick Guzzo']
+    s.email = 'dguzzo@gmail.com'
     
     s.files = Dir['lib/**/*.rb', 'vendor/*.rb']
     

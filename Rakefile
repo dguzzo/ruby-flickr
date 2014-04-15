@@ -28,4 +28,10 @@ namespace :creative_commons do
         test = RubyFlickr.new
         test.get_creative_common_faves(3)
     end
+    
+    desc "get my photos that are untagged"
+    task :get_untagged do
+        test = RubyFlickr.new
+        test.get_untagged
+    end
 end
