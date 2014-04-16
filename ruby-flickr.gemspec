@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
     s.files = Dir['lib/**/*.rb', 'vendor/*.rb']
     
     s.add_dependency 'flickraw'
-    s.add_dependency 'dguzzo-util'
     
     s.add_development_dependency 'rspec'
     s.add_development_dependency 'pry'

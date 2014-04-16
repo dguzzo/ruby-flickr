@@ -26,3 +26,4 @@ photo-info
 BUILD_NOTES.md
 
 *.gem
+Gemfile.lock
