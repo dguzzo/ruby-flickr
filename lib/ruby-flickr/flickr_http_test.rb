@@ -49,7 +49,7 @@ class Flickr_API
   # f.save_favorite(*(16..20).to_a) ## l33t
   
   def save_favorite(*index)
-    image_dir = Utils::createDirIfNeeded('images')
+    image_dir = Utils::create_dir_if_needed('images')
         
     index.each do |i|
         raise IndexError if i >= @faves.length

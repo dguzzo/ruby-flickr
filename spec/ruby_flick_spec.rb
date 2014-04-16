@@ -14,21 +14,21 @@ describe "ruby_flickr" do
 
         it "sets FlickRaw.api_key and FlickRaw.shared_secret" do
           Settings::stub(:authentication).and_return({:api_key => 'fake-api-key', :shared_secret => "fake-shared-secret"})
-          flickraw_basic = RubyFlickr.new
+          flickraw_basic = RubyFlickr::API.new
           FlickRaw.api_key.should eq('fake-api-key')
           FlickRaw.shared_secret.should eq('fake-shared-secret')
         end
 
         it "doesn't set FlickRaw.shared_secret if not present in Settings" do
           Settings::stub(:authentication).and_return({:api_key => 'fake-api-key'})
-          flickraw_basic = RubyFlickr.new
+          flickraw_basic = RubyFlickr::API.new
           FlickRaw.api_key.should eq('fake-api-key')
           FlickRaw.shared_secret.should be_nil
         end
 
         it "doesn't set FlickRaw.api_key if not present in Settings" do
           Settings::stub(:authentication).and_return({:shared_secret => 'fake-shared-secret'})
-          flickraw_basic = RubyFlickr.new
+          flickraw_basic = RubyFlickr::API.new
           FlickRaw.shared_secret.should eq('fake-shared-secret')
           FlickRaw.api_key.should be_nil
         end
@@ -38,14 +38,14 @@ describe "ruby_flickr" do
       it "should call Settings.load!" do
         Settings::stub(:authentication).and_return({:api_key => 'fake-api-key', :shared_secret => "fake-shared-secret"})
         Settings.should_receive(:load!)
-        flickraw_basic = RubyFlickr.new
+        flickraw_basic = RubyFlickr::API.new
       end
     end
     
     describe "sanitize_filename" do
       flickraw_basic = nil
       before :each do
-        flickraw_basic = RubyFlickr.new
+        flickraw_basic = RubyFlickr::API.new
       end
       
       it "sanitizes properly" do
