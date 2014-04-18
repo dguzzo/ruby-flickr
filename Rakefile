@@ -1,4 +1,13 @@
+$:.unshift  File.join(File.dirname(__FILE__), "lib")
+
 require 'ruby-flickr'
+
+namespace :build do
+    desc "create settings file"
+    task :create_settings do
+        `cp config/sample_settings.yml config/ruby-flickr-settings.yml`
+    end
+end
 
 # 0 => "All Rights Reserved",
 # 4 => "Attribution License",
