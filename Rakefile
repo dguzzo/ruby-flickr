@@ -5,7 +5,7 @@ require 'ruby-flickr'
 namespace :build do
     desc "create settings file"
     task :create_settings do
-        `cp config/sample_settings.yml config/ruby-flickr-settings.yml`
+        File.copy_stream("config/sample_settings.yml", "config/ruby-flickr-settings.yml")
     end
 end
 
