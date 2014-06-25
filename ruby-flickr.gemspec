@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
     s.files = Dir['lib/**/*.rb', 'vendor/*.rb']
     
     s.add_dependency 'flickraw'
+    # s.add_dependency 'dguzzo-utils' # sigh. http://stackoverflow.com/questions/11254066/gems-not-found-by-gem-list-when-using-bundle-install-for-git-gems-with-rvm?lq=1
     
     s.add_development_dependency 'rspec'
     s.add_development_dependency 'pry'
