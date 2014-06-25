@@ -3,7 +3,7 @@ require 'net/http'
 require 'xmlsimple'
 require 'pp'
 require 'json'
-require './lib/utils.rb'
+require './lib/utils'
 require 'pry'
 require 'pry-nav'
 
@@ -44,32 +44,30 @@ class Flickr_API
   end
 
   # example usages:
-  #f.save_favorite(3)
-  #f.save_favorite(3, 7, 5)
+  # f.save_favorite(3)
+  # f.save_favorite(3, 7, 5)
   # f.save_favorite(*(16..20).to_a) ## l33t
   
   def save_favorite(*index)
     image_dir = Utils::create_dir_if_needed('images')
         
     index.each do |i|
-        raise IndexError if i >= @faves.length
-        photo = @faves[i]
-        title = photo['title'][0]
-        url = photo['link'][1]['href']
-        uri = URI.parse(url)
+      raise IndexError if i >= @faves.length
+      photo = @faves[i]
+      title = photo['title'][0]
+      url = photo['link'][1]['href']
+      uri = URI.parse(url)
 
-        puts 'getting file...'
-        response = Net::HTTP.get_response(uri)
-        puts 'saving file...'
-        File.open("#{image_dir}/#{title}.jpg", 'w') do |file|
-            file.write(response.body)
-        end
-
+      puts 'getting file...'
+      response = Net::HTTP.get_response(uri)
+      puts 'saving file...'
+      File.open("#{image_dir}/#{title}.jpg", 'w') do |file|
+          file.write(response.body)
+      end
     end
     
     rescue IndexError => e
-        puts "past the length of the array--stopping."
-    
+      puts "past the length of the array--stopping."
   end
 
   private
