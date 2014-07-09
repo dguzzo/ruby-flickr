@@ -13,3 +13,6 @@ use FlickRaw gem (or not) to access Flickr API
         ruby flickr_http_test.rb
 ## flickraw
         ruby flickraw_test.rb
+
+# Feedback
+Comments on the sanity of my code—either general or specific—are **extremely** welcomed.
