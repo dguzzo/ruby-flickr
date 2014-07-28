@@ -1,18 +1,20 @@
 ruby-flickr
 ===========
 
-use FlickRaw gem (or not) to access Flickr API
+use FlickRaw gem to access Flickr API
 
-## Table of Contents
+# Running
 
-   * [Accessing flickr API manually](#flickr)
-   * [Accessing flickr API via Flickraw gem](#flickraw)
-   * [Running blending script](#running-blending)
+```ruby
+test = RubyFlickr::API.new(5) # default license
+test.get_creative_common_faves
 
-## flickr
-        ruby flickr_http_test.rb
-## flickraw
-        ruby flickraw_test.rb
+test = RubyFlickr::API.new
+test.get_untagged
+
+test = RubyFlickr::API.new
+test.get_my_public_photos
+```
 
 # Feedback
 Comments on the sanity of my code—either general or specific—are **extremely** welcomed.
