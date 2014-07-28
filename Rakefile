@@ -24,7 +24,7 @@ namespace :creative_commons do
   desc "get Attribution-ShareAlike License favorite photos"
   task :get_attribution_share_alike do
     test = RubyFlickr::API.new
-    test.get_creative_common_faves(5) #default
+    test.get_creative_common_faves(5) # default
   end
 
   desc "get Attribution-NonCommercial-ShareAlike License favorite photos"
@@ -48,7 +48,7 @@ namespace :creative_commons do
   desc "get recent photos"
   task :get_recent do
     test = RubyFlickr::API.new
-    test.get_recent
+    test.get_recent # Returns a list of the latest public photos uploaded to flickr.
   end
 
   desc "get my public photos"

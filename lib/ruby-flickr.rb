@@ -76,13 +76,27 @@ module RubyFlickr
 
       print "getting up to #{Utils::ColorPrint::green(PER_PAGE)} creative common favorites with #{Utils::ColorPrint::green(LICENSE_TEXT[@license])} license..."
 
-      photos = flickr.photos.search(:user_id => 'me', :license => @license, :faves => 1, per_page: PER_PAGE, page: page, :extras => "url_o")
+      photos = flickr.photos.search(:user_id => 'me', :license => @license, :faves => 1, per_page: PER_PAGE, page: page)
+      photos_info = []
 
       if photos.to_a.empty?
         puts "\nzero photos found in search; exiting."
       else
-        puts "\nfound #{photos.to_a.length} photos. fetching...\n"
-        fetch_files(photos)
+        puts "\nfound #{photos.to_a.length} photos. fetching each...\n"
+        urls = photos.map do |p|
+          print "."
+          photos_info << flickr.photos.getInfo(:photo_id => p['id'])
+          photo_sizes = flickr.photos.getSizes(photo_id: p.id)
+
+          begin
+            photo_sizes.to_a.last.source
+          rescue => e
+            puts e
+            "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
+          end
+        end
+
+        fetch_files(urls, photos_info)
       end
     end
 
@@ -196,7 +210,7 @@ module RubyFlickr
       puts "loaded settings at #{filename}"
     end
 
-    def fetch_files(urls, photos_info, dir)
+    def fetch_files(urls, photos_info, dir=nil)
       dir ||= "images-license-#{@license}"
       new_dir = "assets/#{dir}"
       Utils::create_dir_if_needed(new_dir)
