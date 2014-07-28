@@ -1,10 +1,8 @@
 require 'flickraw'
-require 'pry'
-require 'pry-nav'
-require 'dguzzo-utils'
 require './vendor/deep_symbolize'
 require './vendor/settings'
 require 'yaml'
+require 'ruby-flickr/utils'
 
 =begin
   ## p flickr.photos.licenses.getInfo
@@ -64,7 +62,7 @@ module RubyFlickr
             @token = flickr.get_request_token
             auth_url = flickr.get_authorize_url(@token['oauth_token'], :perms => 'delete')
 
-            puts "Open this url in your process to complete the authication process :\n#{DguzzoUtils::ColorPrint::green(auth_url)}\n"
+            puts "Open this url in your process to complete the authication process :\n#{Utils::ColorPrint::green(auth_url)}\n"
             puts "Copy here the number given when you complete the process."
             verify = gets.strip
 
@@ -91,7 +89,7 @@ module RubyFlickr
             set_local_auth
             return unless @login
 
-            print "getting up to #{DguzzoUtils::ColorPrint::green(PER_PAGE)} creative common favorites with #{DguzzoUtils::ColorPrint::green(LICENSE_TEXT[@license])} license..."
+            print "getting up to #{Utils::ColorPrint::green(PER_PAGE)} creative common favorites with #{Utils::ColorPrint::green(LICENSE_TEXT[@license])} license..."
 
             photos = flickr.photos.search(:user_id => 'me', :license => @license, :faves => 1, per_page: PER_PAGE, page: page)
             photos_info = []
@@ -124,7 +122,7 @@ module RubyFlickr
             untagged = flickr.photos.getUntagged
 
             if untagged
-                DguzzoUtils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
+                Utils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
 
                 untagged.each do |photo|
                     photo_info = flickr.photos.getInfo(:photo_id => photo['id'])
@@ -133,7 +131,7 @@ module RubyFlickr
 
                 untagged.length
             else
-                DguzzoUtils::ColorPrint::red_out("there was a problem with the flickr.photos.getUntagged call")
+                Utils::ColorPrint::red_out("there was a problem with the flickr.photos.getUntagged call")
             end
         end
 
@@ -144,7 +142,7 @@ module RubyFlickr
         def sanitize_filename(filename)
             if !filename.is_a?(String)
                 badname = "bad-file-name"
-                DguzzoUtils::ColorPrint::red_out("unreadable filename; can't sanitize. file being written with title: #{badname}" )
+                Utils::ColorPrint::red_out("unreadable filename; can't sanitize. file being written with title: #{badname}" )
                 return badname
             elsif filename.empty?
                 return ""
@@ -164,7 +162,7 @@ module RubyFlickr
                 else
                     File.open(file_path, 'w') do |file|
                         puts Dir.pwd
-                        puts "writing file #{DguzzoUtils::ColorPrint::green(title)}.yml..."
+                        puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
                         file.write(custom_photo_info(photo, urls[index]).to_yaml)
                     end
                 end
