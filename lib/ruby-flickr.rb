@@ -29,6 +29,7 @@ LICENSE_TEXT = {
     8 => "United States Government Work",
 }.freeze
 
+MY_FLICKR_ID = "49782305@N02".freeze
 PER_PAGE = 10
 
 module RubyFlickr
@@ -59,30 +60,16 @@ module RubyFlickr
     end
 
     def get_my_public_photos
-      @token = flickr.get_request_token
-      auth_url = flickr.get_authorize_url(@token['oauth_token'], :perms => 'delete')
-
-      puts "Open this url in your process to complete the authication process :\n#{Utils::ColorPrint::green(auth_url)}\n"
-      puts "Copy here the number given when you complete the process."
-      verify = gets.strip
-
-      begin
-        flickr.get_access_token(@token['oauth_token'], @token['oauth_token_secret'], verify)
-        @login = flickr.test.login
-        puts "You are now authenticated as #{@login.username} with token #{flickr.access_token} and secret #{flickr.access_secret}"
-      rescue FlickRaw::FailedResponse => e
-        puts "Authentication failed : #{e.msg}"
+      set_local_auth
+      return unless @login
+      public_photos = flickr.people.getPublicPhotos(:user_id => MY_FLICKR_ID, :extras => "url_o")
+      
+      if public_photos.to_a.empty?
+        puts "\nzero photos found in search; exiting."
+      else
+        puts "\nfound #{public_photos.to_a.length} photos. fetching...\n"
+        fetch_just_files(public_photos, "my-public-photos")
       end
-
-      puts @login.inspect
-      list = flickr.people.getPublicPhotos(:user_id => @login.id)
-
-      id     = list[0].id
-      secret = list[0].secret
-      info = flickr.photos.getInfo :photo_id => id, :secret => secret
-
-      puts info.title           # => "PICT986"
-      puts info.dates.taken     # => "2006-07-06 15:16:18"
     end
 
     def get_creative_common_faves(page = 1)
@@ -91,28 +78,13 @@ module RubyFlickr
 
       print "getting up to #{Utils::ColorPrint::green(PER_PAGE)} creative common favorites with #{Utils::ColorPrint::green(LICENSE_TEXT[@license])} license..."
 
-      photos = flickr.photos.search(:user_id => 'me', :license => @license, :faves => 1, per_page: PER_PAGE, page: page)
-      photos_info = []
+      photos = flickr.photos.search(:user_id => 'me', :license => @license, :faves => 1, per_page: PER_PAGE, page: page, :extras => "url_o")
 
       if photos.to_a.empty?
         puts "\nzero photos found in search; exiting."
       else
-        puts "\nfound #{photos.to_a.length} photos. fetching each...\n"
-        urls = photos.map do |p|
-          print "."
-          photos_info << flickr.photos.getInfo(:photo_id => p['id'])
-          photo_sizes = flickr.photos.getSizes(photo_id: p.id)
-
-          begin
-            photo_sizes.to_a.last.source
-          rescue => e
-            puts e
-            "http://farm#{p['farm']}.staticflickr.com/#{p['server']}/#{p['id']}_#{p['secret']}.jpg"
-          end
-        end
-        puts
-
-        fetch_files(urls, photos_info)
+        puts "\nfound #{photos.to_a.length} photos. fetching...\n"
+        fetch_files(photos)
       end
     end
 
@@ -154,7 +126,7 @@ module RubyFlickr
     def write_files_info(photos_info, urls)
       photos_info.each_with_index do |photo, index|
         info_dir = nil #'photo-info/'
-        Utils.create_dir_if_needed(info_dir) if info_dir
+        Utils::create_dir_if_needed(info_dir) if info_dir
         title = sanitize_filename(photo.title)
         file_path = "#{info_dir}#{title}.yml"
 
@@ -200,7 +172,7 @@ module RubyFlickr
       flickr.access_token && flickr.access_secret
       begin
         @login = flickr.test.login
-        puts "You are now authenticated as #{@login.username} with token #{flickr.access_token} and secret #{flickr.access_secret}"
+        puts "You are now authenticated as #{Utils::ColorPrint::green(@login.username)} with token #{flickr.access_token} and secret #{flickr.access_secret}"
       rescue FlickRaw::FailedResponse => e
         puts "Authentication failed : #{e.msg}"
       end
@@ -226,9 +198,10 @@ module RubyFlickr
       puts "loaded settings at #{filename}"
     end
 
-    def fetch_files(urls, photos_info)
-      new_dir = "assets/images-license-#{@license}"
-      Utils.create_dir_if_needed(new_dir)
+    def fetch_files(urls, photos_info, dir)
+      dir ||= "images-license-#{@license}"
+      new_dir = "assets/#{dir}"
+      Utils::create_dir_if_needed(new_dir)
 
       Dir.chdir(new_dir) do
         urls.each_with_index do |url, index|
@@ -236,6 +209,20 @@ module RubyFlickr
           `wget --no-clobber -O '#{download_name}' '#{url}'`
         end
         write_files_info(photos_info, urls) 
+      end
+    end
+
+    # doesn't write detailed info to a yml file like fetch_files()
+    def fetch_just_files(photos, dir)
+      dir ||= "temp"
+      new_dir = "assets/#{dir}"
+      Utils::create_dir_if_needed(new_dir)
+
+      Dir.chdir(new_dir) do
+        photos.to_a.each_with_index do |photo, index|
+          download_name = sanitize_filename(photo.title) + ".jpg"
+          `wget --no-clobber -O '#{download_name}' '#{photo.url_o}'`
+        end
       end
     end
   end

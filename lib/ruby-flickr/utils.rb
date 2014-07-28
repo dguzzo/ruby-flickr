@@ -24,4 +24,12 @@ module Utils
       puts "\e[1;31m#{message}\e[0m"
     end
   end
+  
+  def self.create_dir_if_needed(image_dir_name)
+    unless File.directory?(image_dir_name)
+      puts "creating directory '#{image_dir_name}'..."
+      Dir.mkdir(image_dir_name)
+    end
+    image_dir_name
+  end
 end

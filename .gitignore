@@ -28,3 +28,4 @@ BUILD_NOTES.md
 *.gem
 Gemfile.lock
 vendor/
+assets/
