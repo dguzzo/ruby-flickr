@@ -10,7 +10,6 @@ require 'pry-nav'
 require 'open-uri'
 
 class Flickr_API
-
   attr_reader :faves, :favesXML, :titles
 
   def initialize(get_faves = false)

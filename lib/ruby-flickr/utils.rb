@@ -23,6 +23,5 @@ module Utils
     def self.red_out(message)
       puts "\e[1;31m#{message}\e[0m"
     end
-
   end
 end
