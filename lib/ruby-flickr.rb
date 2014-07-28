@@ -60,8 +60,6 @@ module RubyFlickr
     end
 
     def get_my_public_photos
-      set_local_auth
-      return unless @login
       public_photos = flickr.people.getPublicPhotos(:user_id => MY_FLICKR_ID, :extras => "url_o")
       
       if public_photos.to_a.empty?
