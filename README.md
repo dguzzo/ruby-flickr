@@ -5,7 +5,13 @@ use FlickRaw gem to access Flickr API
 
 # Running
 
+```bash
+gem install ruby-flickr
+```
+
 ```ruby
+require 'ruby-flickr'
+
 test = RubyFlickr::API.new(5) # default license
 test.get_creative_common_faves
 
