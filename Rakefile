@@ -23,20 +23,20 @@ end
 namespace :creative_commons do
   desc "get Attribution-ShareAlike License favorite photos"
   task :get_attribution_share_alike do
-    test = RubyFlickr::API.new
-    test.get_creative_common_faves(5) # default
+    test = RubyFlickr::API.new(5) # default
+    test.get_creative_common_faves
   end
 
   desc "get Attribution-NonCommercial-ShareAlike License favorite photos"
   task :get_attribution_noncom_share_alike do
-    test = RubyFlickr::API.new
-    test.get_creative_common_faves(1)
+    test = RubyFlickr::API.new(1)
+    test.get_creative_common_faves
   end
 
   desc "get Attribution-NonCommercial-NoDerivs License favorite photos"
   task :get_attribution_noncom_noderivs do
-    test = RubyFlickr::API.new
-    test.get_creative_common_faves(3)
+    test = RubyFlickr::API.new(3)
+    test.get_creative_common_faves
   end
 
   desc "get my photos that are untagged"
