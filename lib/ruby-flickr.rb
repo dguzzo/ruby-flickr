@@ -217,13 +217,17 @@ module RubyFlickr
 
       Dir.chdir(new_dir) do
         urls.each_with_index do |url, index|
-          download_name = sanitize_filename(photos_info[index].title) + ".jpg"
-          `wget --no-clobber -O '#{download_name}' '#{url}'`
+          filename = sanitize_filename(photos_info[index].title) + ".jpg"
+          fetch_file(url, filename)
         end
         write_files_info(photos_info, urls) 
       end
     end
 
+    def fetch_file(url, filename)
+      `wget --no-clobber -O '#{filename}' '#{url}'`
+    end
+    
     # doesn't write detailed info to a yml file like fetch_files()
     def fetch_just_files(photos, dir)
       dir ||= "temp"
