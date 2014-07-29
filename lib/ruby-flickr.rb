@@ -47,7 +47,7 @@ module RubyFlickr
       list   = flickr.photos.getRecent
       id     = list[0].id
       secret = list[0].secret
-      info = flickr.photos.getInfo :photo_id => id, :secret => secret
+      info = flickr.photos.getInfo(photo_id: id, secret: secret)
 
       puts info.title           
       puts info.dates.taken     
@@ -60,7 +60,7 @@ module RubyFlickr
     end
 
     def get_my_public_photos
-      public_photos = flickr.people.getPublicPhotos(:user_id => MY_FLICKR_ID, :extras => "url_o")
+      public_photos = flickr.people.getPublicPhotos(user_id: MY_FLICKR_ID, extras: "url_o")
       
       if public_photos.to_a.empty?
         puts "\nzero photos found in search; exiting."
@@ -76,7 +76,7 @@ module RubyFlickr
 
       print "getting up to #{Utils::ColorPrint::green(PER_PAGE)} creative common favorites with #{Utils::ColorPrint::green(LICENSE_TEXT[@license])} license..."
 
-      photos = flickr.photos.search(:user_id => 'me', :license => @license, :faves => 1, per_page: PER_PAGE, page: page)
+      photos = flickr.photos.search(user_id: 'me', license: @license, faves: 1, per_page: PER_PAGE, page: page)
       photos_info = []
 
       if photos.to_a.empty?
@@ -85,7 +85,7 @@ module RubyFlickr
         puts "\nfound #{photos.to_a.length} photos. fetching each...\n"
         urls = photos.map do |p|
           print "."
-          photos_info << flickr.photos.getInfo(:photo_id => p['id'])
+          photos_info << flickr.photos.getInfo(photo_id: p['id'])
           photo_sizes = flickr.photos.getSizes(photo_id: p.id)
 
           begin
@@ -109,7 +109,7 @@ module RubyFlickr
         Utils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
 
         untagged.each do |photo|
-          photo_info = flickr.photos.getInfo(:photo_id => photo['id'])
+          photo_info = flickr.photos.getInfo(photo_id: photo['id'])
           puts "#{photo.title} - #{photo_info.urls.first._content}"
         end
 
@@ -197,7 +197,7 @@ module RubyFlickr
     end
 
     def ask_to_open(id)
-      info = flickr.photos.getInfo(:photo_id => id)
+      info = flickr.photos.getInfo(photo_id: id)
       url = FlickRaw.url_b(info)
       %x(open "#{url}")
       user_url = FlickRaw.url_profile(info)
