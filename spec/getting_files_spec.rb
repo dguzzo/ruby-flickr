@@ -12,7 +12,7 @@ describe "getting photos" do
   xit "getting untagged photos sets local auth" do
     flickraw_basic::stub(:set_local_auth)
     flickr.photos::stub(:getUntagged) # stub flickraw's call to the flickr API
-    flickraw_basic.should_receive(:set_local_auth)
+    expect(flickraw_basic).to have_received(:set_local_auth)
     flickraw_basic.get_untagged
   end
   
@@ -20,7 +20,7 @@ describe "getting photos" do
     flickraw_basic::stub(:set_local_auth)
     flickr.photos::stub(:getUntagged).and_return([])
     expect { flickraw_basic.get_untagged }.to_not raise_error
-    flickraw_basic.get_untagged.should equal(0)
+    expect(flickraw_basic.get_untagged).to eq(0)
   end
 
   xit "getting untagged photos returns count of files found" do
@@ -30,6 +30,6 @@ describe "getting photos" do
 
     flickraw_basic::stub(:set_local_auth)
     flickr.photos::stub(:getUntagged).and_return([photo1, photo2]) # TODO this needs to return a flickraw ResponseList
-    flickraw_basic.get_untagged.should equal(2)
+    expect(flickraw_basic.get_untagged).to eq(2)
   end
 end
