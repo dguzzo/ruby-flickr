@@ -1,11 +1,10 @@
-require 'pry'
-require 'pry-nav'
 require 'spec_helper'
 require 'flickraw'
 require 'ruby-flickr'
 
 describe "getting photos" do
   flickraw_basic = nil
+
   before :each do
     flickraw_basic = RubyFlickr::API.new
   end
@@ -33,5 +32,4 @@ describe "getting photos" do
     flickr.photos::stub(:getUntagged).and_return([photo1, photo2]) # TODO this needs to return a flickraw ResponseList
     flickraw_basic.get_untagged.should equal(2)
   end
-
 end
