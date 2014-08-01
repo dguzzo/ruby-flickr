@@ -13,21 +13,21 @@ describe "ruby_flickr" do
     end
 
     it "sets FlickRaw.api_key and FlickRaw.shared_secret" do
-      Settings::stub(:authentication).and_return({:api_key => 'fake-api-key', :shared_secret => "fake-shared-secret"})
+      Settings::stub(:authentication).and_return({api_key: 'fake-api-key', shared_secret: "fake-shared-secret"})
       flickraw_basic = RubyFlickr::API.new
       expect(FlickRaw.api_key).to eq('fake-api-key')
       expect(FlickRaw.shared_secret).to eq('fake-shared-secret')
     end
 
     it "doesn't set FlickRaw.shared_secret if not present in Settings" do
-      Settings::stub(:authentication).and_return({:api_key => 'fake-api-key'})
+      Settings::stub(:authentication).and_return({api_key: 'fake-api-key'})
       flickraw_basic = RubyFlickr::API.new
       expect(FlickRaw.api_key).to eq('fake-api-key')
       expect(FlickRaw.shared_secret).to be_nil
     end
 
     it "doesn't set FlickRaw.api_key if not present in Settings" do
-      Settings::stub(:authentication).and_return({:shared_secret => 'fake-shared-secret'})
+      Settings::stub(:authentication).and_return({shared_secret: 'fake-shared-secret'})
       flickraw_basic = RubyFlickr::API.new
       expect(FlickRaw.shared_secret).to eq('fake-shared-secret')
       expect(FlickRaw.api_key).to be_nil
@@ -36,7 +36,7 @@ describe "ruby_flickr" do
 
   describe "load_settings" do
     it "should call Settings.load!" do
-      Settings::stub(:authentication).and_return({:api_key => 'fake-api-key', :shared_secret => "fake-shared-secret"})
+      Settings::stub(:authentication).and_return({api_key: 'fake-api-key', shared_secret: "fake-shared-secret"})
       Settings::stub(:load!)
       flickraw_basic = RubyFlickr::API.new
       expect(Settings).to have_received(:load!)
