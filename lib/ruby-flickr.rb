@@ -1,7 +1,9 @@
 require 'flickraw'
-require './vendor/deep_symbolize'
-require './vendor/settings'
+$:.unshift(File.expand_path('../vendor', File.dirname(__FILE__))) # allow easier inclusion of vendor files
+require 'deep_symbolize'
+require 'settings'
 require 'yaml'
+
 require 'ruby-flickr/utils'
 
 =begin

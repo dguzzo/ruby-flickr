@@ -14,3 +14,7 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = 'random'
 end
+
+$:.unshift(File.expand_path('../vendor', File.dirname(__FILE__))) # allow easier inclusion of vendor files
+require 'deep_symbolize'
+require 'settings'
