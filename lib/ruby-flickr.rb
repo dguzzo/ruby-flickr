@@ -108,8 +108,9 @@ module RubyFlickr
       untagged_photos = flickr.photos.getUntagged(per_page: per_page)
 
       if untagged_photos   
-        Utils::ColorPrint::green_out("you have #{untagged_photos.length} untagged photos." )
-
+        Utils::ColorPrint::green_out("you have #{untagged_photos.length} untagged photos:" )
+        Utils::ColorPrint::cyan_out("(note: these are not being downloaded)" )
+        
         untagged_photos.each do |photo|
           photo_info = flickr.photos.getInfo(photo_id: photo['id'])
           puts "#{photo.title} - #{photo_info.urls.first._content}"

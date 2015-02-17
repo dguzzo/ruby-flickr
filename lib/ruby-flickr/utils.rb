@@ -8,6 +8,10 @@ module Utils
       "\e[1;33m#{message}\e[0m"
     end
 
+    def self.cyan(message)
+      "\e[1;36m#{message}\e[0m"
+    end
+
     def self.red(message)
       "\e[1;31m#{message}\e[0m"
     end
@@ -18,6 +22,10 @@ module Utils
 
     def self.yellow_out(message)
       puts "\e[1;33m#{message}\e[0m"
+    end
+
+    def self.cyan_out(message)
+      puts "\e[1;36m#{message}\e[0m"
     end
 
     def self.red_out(message)
