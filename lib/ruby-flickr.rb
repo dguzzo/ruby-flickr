@@ -31,7 +31,6 @@ LICENSE_TEXT = {
     8 => "United States Government Work",
 }.freeze
 
-MY_FLICKR_ID = "49782305@N02".freeze
 PER_PAGE = 10
 
 module RubyFlickr
@@ -66,14 +65,19 @@ module RubyFlickr
       ask_to_open(id)
     end
 
-    def get_my_public_photos
-      public_photos = flickr.people.getPublicPhotos(user_id: MY_FLICKR_ID, extras: "url_o")
+    def get_my_public_photos(per_page = 20)
+      user_id = Settings.user_id
+      user = flickr.people.getInfo(user_id: user_id)
+
+      Utils::ColorPrint::cyan_out("getting #{per_page} public photos for user #{user.username} (#{user_id})")
+
+      public_photos = flickr.people.getPublicPhotos(user_id: user_id , extras: "url_o", per_page: per_page)
       
       if public_photos.to_a.empty?
         puts "\nzero photos found in search; exiting."
       else
         puts "\nfound #{public_photos.to_a.length} photos. fetching...\n"
-        fetch_just_files(public_photos, "my-public-photos")
+        fetch_just_files(public_photos, "#{Utils::sanitize_filename(user.username)}-public-photos")
       end
     end
 

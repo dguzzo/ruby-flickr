@@ -60,6 +60,6 @@ namespace :creative_commons do
   desc "get my public photos"
   task :get_my_public_photos do
     flickr = RubyFlickr::API.new
-    flickr.get_my_public_photos
+    flickr.get_my_public_photos(5)
   end
 end
