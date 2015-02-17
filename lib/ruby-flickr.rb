@@ -103,21 +103,21 @@ module RubyFlickr
     end
 
     # prints out titles of untagged photos
-    def get_untagged
+    def get_untagged(per_page = 100)
       set_local_auth
-      untagged = flickr.photos.getUntagged
+      untagged_photos = flickr.photos.getUntagged(per_page: per_page)
 
-      if untagged
-        Utils::ColorPrint::green_out("you have #{untagged.length} untagged photos." )
+      if untagged_photos   
+        Utils::ColorPrint::green_out("you have #{untagged_photos.length} untagged photos." )
 
-        untagged.each do |photo|
+        untagged_photos.each do |photo|
           photo_info = flickr.photos.getInfo(photo_id: photo['id'])
           puts "#{photo.title} - #{photo_info.urls.first._content}"
         end
 
-        untagged.length
+        untagged_photos.length
       else
-        Utils::ColorPrint::red_out("there was a problem with the flickr.photos.getUntagged call")
+        Utils::ColorPrint::red_out("the flickr.photos.getUntagged call did not return any photos")
       end
     end
 
