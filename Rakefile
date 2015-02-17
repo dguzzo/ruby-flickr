@@ -23,37 +23,37 @@ end
 namespace :creative_commons do
   desc "get Attribution-ShareAlike License favorite photos"
   task :get_attribution_share_alike do
-    test = RubyFlickr::API.new(5) # default
-    test.get_creative_common_faves
+    flickr = RubyFlickr::API.new(5) # default
+    flickr.get_creative_common_faves
   end
 
   desc "get Attribution-NonCommercial-ShareAlike License favorite photos"
   task :get_attribution_noncom_share_alike do
-    test = RubyFlickr::API.new(1)
-    test.get_creative_common_faves
+    flickr = RubyFlickr::API.new(1)
+    flickr.get_creative_common_faves
   end
 
   desc "get Attribution-NonCommercial-NoDerivs License favorite photos"
   task :get_attribution_noncom_noderivs do
-    test = RubyFlickr::API.new(3)
-    test.get_creative_common_faves
+    flickr = RubyFlickr::API.new(3)
+    flickr.get_creative_common_faves
   end
 
   desc "get my photos that are untagged"
   task :get_untagged do
-    test = RubyFlickr::API.new
-    test.get_untagged
+    flickr = RubyFlickr::API.new
+    flickr.get_untagged
   end
 
   desc "get recent photos"
   task :get_recent do
-    test = RubyFlickr::API.new
-    test.get_recent # Returns a list of the latest public photos uploaded to flickr.
+    flickr = RubyFlickr::API.new
+    flickr.get_recent # Returns a list of the latest public photos uploaded to flickr.
   end
 
   desc "get my public photos"
   task :get_my_public_photos do
-    test = RubyFlickr::API.new
-    test.get_my_public_photos
+    flickr = RubyFlickr::API.new
+    flickr.get_my_public_photos
   end
 end
