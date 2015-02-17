@@ -124,43 +124,11 @@ module RubyFlickr
     #########
     private
 
-    # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
-    def sanitize_filename(filename)
-      if !filename.is_a?(String)
-        badname = "bad-file-name"
-        Utils::ColorPrint::red_out("unreadable filename; can't sanitize. file being written with title: #{badname}" )
-        return badname
-      elsif filename.empty?
-        return ""
-      end
-      
-      filename.gsub(/[^0-9A-z.\-]/, '_')
-    end
-
-    def write_files_info(photos_info, urls)
-      photos_info.each_with_index do |photo, index|
-        info_dir = nil #'photo-info/'
-        Utils::create_dir_if_needed(info_dir) if info_dir
-        title = sanitize_filename(photo.title)
-        file_path = "#{info_dir}#{title}.yml"
-
-        if File.exists?(file_path)
-          puts "skipping file-write #{file_path}; it already exists"
-        else
-          File.open(file_path, 'w') do |file|
-            puts Dir.pwd
-            puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
-            file.write(custom_photo_info(photo, urls[index]).to_yaml)
-          end
-        end
-      end
-    end
-
     def custom_photo_info(photo, url)
       {
         "titles" => {
           "original" => photo.title,
-          "sanitized" => sanitize_filename(photo.title)
+          "sanitized" => Utils::sanitize_filename(photo.title)
         },
         "owner" => {
           "username" => photo.owner.username,
@@ -219,10 +187,10 @@ module RubyFlickr
 
       Dir.chdir(new_dir) do
         urls.each_with_index do |url, index|
-          filename = sanitize_filename(photos_info[index].title) + ".jpg"
+          filename = Utils::sanitize_filename(photos_info[index].title) + ".jpg"
           fetch_file(url, filename)
         end
-        write_files_info(photos_info, urls) 
+        Utils::write_files_info(photos_info, urls) 
       end
     end
 
@@ -238,7 +206,7 @@ module RubyFlickr
 
       Dir.chdir(new_dir) do
         photos.to_a.each_with_index do |photo, index|
-          download_name = sanitize_filename(photo.title) + ".jpg"
+          download_name = Utils::sanitize_filename(photo.title) + ".jpg"
           `wget --no-clobber -O '#{download_name}' '#{photo.url_o}'`
         end
       end
