@@ -16,7 +16,7 @@ describe "getting photos" do
     flickraw_basic.get_untagged
   end
   
-  xit "getting untagged photos doesn't break if zero photos are returned" do
+  xit "getting untagged photos doesn't raise an error if zero photos are returned" do
     flickraw_basic::stub(:set_local_auth)
     flickr.photos::stub(:getUntagged).and_return([])
     expect { flickraw_basic.get_untagged }.to_not raise_error
