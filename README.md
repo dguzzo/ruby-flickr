@@ -1,7 +1,7 @@
 ruby-flickr
 ===========
 
-use FlickRaw gem to access Flickr API
+use [FlickRaw](http://hanklords.github.io/flickraw/) gem to access Flickr API
 
 # Running
 
