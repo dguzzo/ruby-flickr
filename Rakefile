@@ -46,9 +46,15 @@ namespace :creative_commons do
   end
 
   desc "get recent photos"
-  task :get_recent do
+  task :get_recent_public_photos do
     flickr = RubyFlickr::API.new
-    flickr.get_recent # Returns a list of the latest public photos uploaded to flickr.
+    flickr.get_recent_public_photos # Returns a list of the latest public photos uploaded to flickr.
+  end
+
+  desc "show most recent public photo"
+  task :show_most_recent_public_photo do
+    flickr = RubyFlickr::API.new
+    flickr.show_most_recent_public_photo # Returns a list of the latest public photos uploaded to flickr.
   end
 
   desc "get my public photos"

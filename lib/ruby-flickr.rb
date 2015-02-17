@@ -45,7 +45,16 @@ module RubyFlickr
       @license = license
     end
 
-    def get_recent
+    def get_recent_public_photos
+      list = flickr.photos.getRecent(per_page: 10)
+
+      list.each do |photo|
+        info = flickr.photos.getInfo(photo_id: photo.id, secret: photo.secret)
+        puts "#{photo.title} -- #{info.dates.taken}"
+      end
+    end
+    
+    def show_most_recent_public_photo 
       list   = flickr.photos.getRecent
       id     = list[0].id
       secret = list[0].secret
@@ -53,10 +62,6 @@ module RubyFlickr
 
       puts info.title           
       puts info.dates.taken     
-
-      # sizes = flickr.photos.getSizes :photo_id => id
-      # original = sizes.find {|s| s.label == 'Original' }
-      # puts original.width       # => "800" -- may fail if they have no original marked image
 
       ask_to_open(id)
     end
@@ -178,7 +183,7 @@ module RubyFlickr
     def load_settings
       filename = "config/ruby-flickr-settings.yml"
       Settings.load!(filename)
-      puts "loaded settings at #{filename}"
+      Utils::ColorPrint::green_out("loaded settings at #{filename}")
     end
 
     def fetch_files(urls, photos_info, dir=nil)
