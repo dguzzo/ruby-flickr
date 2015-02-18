@@ -68,3 +68,12 @@ namespace :creative_commons do
     Utils::collate_cc_files
   end
 end
+
+task :console do
+  require 'irb'
+  require 'irb/completion'
+  require 'ruby-flickr'
+  ARGV.clear
+  IRB.start
+end
+
