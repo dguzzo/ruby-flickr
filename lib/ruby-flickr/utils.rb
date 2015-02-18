@@ -56,16 +56,13 @@ module Utils
 
   def self.write_files_info(photos_info, urls)
     photos_info.each_with_index do |photo, index|
-      info_dir = nil #'photo-info/'
-      Utils::create_dir_if_needed(info_dir) if info_dir
       title = sanitize_filename(photo.title)
-      file_path = "#{info_dir}#{title}.yml"
+      file_path = "#{title}.yml"
 
       if File.exists?(file_path)
         puts "skipping file-write #{file_path}; it already exists"
       else
         File.open(file_path, 'w') do |file|
-          puts Dir.pwd
           puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
           file.write(custom_photo_info(photo, urls[index]).to_yaml)
         end
