@@ -192,7 +192,7 @@ module RubyFlickr
 
     def fetch_files(urls, photos_info, dir=nil)
       dir ||= "images-license-#{@license}"
-      new_dir = "assets/#{dir}"
+      new_dir = "data/#{dir}"
       Utils::create_dir_if_needed(new_dir)
 
       Dir.chdir(new_dir) do
@@ -211,7 +211,7 @@ module RubyFlickr
     # doesn't write detailed info to a yml file like fetch_files()
     def fetch_just_files(photos, dir)
       dir ||= "temp"
-      new_dir = "assets/#{dir}"
+      new_dir = "data/#{dir}"
       Utils::create_dir_if_needed(new_dir)
 
       Dir.chdir(new_dir) do
@@ -222,4 +222,6 @@ module RubyFlickr
       end
     end
   end
+
 end
+

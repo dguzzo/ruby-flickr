@@ -62,4 +62,9 @@ namespace :creative_commons do
     flickr = RubyFlickr::API.new
     flickr.get_my_public_photos(5)
   end
+
+  desc "collate all cc fetched images to one directory"
+  task :collate_cc_images do
+    Utils::collate_cc_files
+  end
 end
