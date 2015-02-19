@@ -56,7 +56,7 @@ module Utils
 
   def self.write_files_info(photos_info, urls)
     photos_info.each_with_index do |photo, index|
-      title = sanitize_filename(photo.title)
+      title = Utils::sanitize_filename(photo.title)
       file_path = "#{title}.yml"
 
       if File.exists?(file_path)
@@ -64,10 +64,34 @@ module Utils
       else
         File.open(file_path, 'w') do |file|
           puts "writing file #{Utils::ColorPrint::green(title)}.yml..."
-          file.write(custom_photo_info(photo, urls[index]).to_yaml)
+          file.write(Utils::custom_photo_info(photo, urls[index]).to_yaml)
         end
       end
     end
+  end
+
+  def self.custom_photo_info(photo, url)
+    {
+      "titles" => {
+        "original" => photo.title,
+        "sanitized" => Utils::sanitize_filename(photo.title)
+      },
+      "owner" => {
+        "username" => photo.owner.username,
+        "realname" => photo.owner.realname,
+        "nsid" => photo.owner.nsid,
+        "profile_page" => "http://www.flickr.com/photos/#{photo.owner.username}/"
+      },
+      "urls" => {
+        "photopage" => photo.urls.first._content,
+        "largest_size" => url
+      },
+      "flickr_annotation" => {
+        "flickr_title" => photo.title,
+        "flickr_title_photo_page" => "#{photo.title} - #{photo.urls.first._content}",
+        "username_profile_page" => photo.owner.username + " - http://www.flickr.com/photos/#{photo.owner.username}/",
+      }
+    }
   end
 
   def self.collate_cc_files

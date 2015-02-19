@@ -134,30 +134,6 @@ module RubyFlickr
     #########
     private
 
-    def custom_photo_info(photo, url)
-      {
-        "titles" => {
-          "original" => photo.title,
-          "sanitized" => Utils::sanitize_filename(photo.title)
-        },
-        "owner" => {
-          "username" => photo.owner.username,
-          "realname" => photo.owner.realname,
-          "nsid" => photo.owner.nsid,
-          "profile_page" => "http://www.flickr.com/photos/#{photo.owner.username}/"
-        },
-        "urls" => {
-          "photopage" => photo.urls.first._content,
-          "largest_size" => url
-        },
-        "flickr_annotation" => {
-          "flickr_title" => photo.title,
-          "flickr_title_photo_page" => "#{photo.title} - #{photo.urls.first._content}",
-          "username_profile_page" => photo.owner.username + " - http://www.flickr.com/photos/#{photo.owner.username}/",
-        }
-      }
-    end
-
     def set_local_auth
       flickr.access_token = Settings.authentication[:token][:access_token]
       flickr.access_secret = Settings.authentication[:token][:access_secret]
