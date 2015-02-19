@@ -3,6 +3,9 @@ $:.unshift File.join(File.dirname(__FILE__), "lib")
 
 require 'ruby-flickr'
 
+task default: ["creative_commons:get_photos_that_allow_derivatives"]
+
+
 namespace :build do
   desc "create settings file"
   task :create_settings do
@@ -21,9 +24,28 @@ end
 # 8 => "United States Government Work",
 
 namespace :creative_commons do
-  desc "get Attribution-ShareAlike License favorite photos"
-  task :get_attribution_share_alike do
-    flickr = RubyFlickr::API.new(5) # default
+
+  desc "get Attribution License favorite photos"
+  task :get_attribution do
+    flickr = RubyFlickr::API.new(4) # default
+    flickr.get_creative_common_faves
+  end
+
+  desc "get Attribution-NoDerivs License favorite photos"
+  task :get_attribution_noderivs do
+    flickr = RubyFlickr::API.new(6)
+    flickr.get_creative_common_faves
+  end
+
+  desc "get Attribution-NonCommercial-NoDerivs License favorite photos"
+  task :get_attribution_noncom_noderivs do
+    flickr = RubyFlickr::API.new(3)
+    flickr.get_creative_common_faves
+  end
+  
+  desc "get Attribution-NoCommercial License favorite photos"
+  task :get_attribution_noncom do
+    flickr = RubyFlickr::API.new(2)
     flickr.get_creative_common_faves
   end
 
@@ -33,9 +55,15 @@ namespace :creative_commons do
     flickr.get_creative_common_faves
   end
 
-  desc "get Attribution-NonCommercial-NoDerivs License favorite photos"
-  task :get_attribution_noncom_noderivs do
-    flickr = RubyFlickr::API.new(3)
+  desc "get Attribution-ShareAlike License favorite photos"
+  task :get_attribution_share_alike do
+    flickr = RubyFlickr::API.new(5)
+    flickr.get_creative_common_faves
+  end
+
+  desc "get no known License favorite photos"
+  task :get_no_known_license do
+    flickr = RubyFlickr::API.new(7)
     flickr.get_creative_common_faves
   end
 
@@ -43,6 +71,18 @@ namespace :creative_commons do
   task :collate_cc_images do
     Utils::collate_cc_files
   end
+
+  desc "get all CC images that allow derivatives"
+  task :get_photos_that_allow_derivatives do
+    Rake::Task["creative_commons:get_attribution"].invoke #4
+    Rake::Task["creative_commons:get_attribution_noncom_share_alike"].invoke #1
+    Rake::Task["creative_commons:get_attribution_noncom"].invoke #2
+    Rake::Task["creative_commons:get_attribution_share_alike"].invoke #5
+    Rake::Task["creative_commons:get_attribution_noncom_share_alike"].invoke #7
+
+    Rake::Task["creative_commons:collate_cc_images"].invoke
+  end
+
 end
 
 namespace :my_photos do

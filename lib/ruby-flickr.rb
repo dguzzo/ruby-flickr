@@ -205,7 +205,7 @@ module RubyFlickr
     end
 
     def fetch_file(url, filename)
-      `wget --no-clobber -O '#{filename}' '#{url}'`
+      `wget --timeout=2 --tries=1 --wait=1 --no-clobber -O '#{filename}' '#{url}'`
     end
     
     # doesn't write detailed info to a yml file like fetch_files()
