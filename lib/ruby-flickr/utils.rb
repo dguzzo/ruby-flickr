@@ -99,12 +99,11 @@ module Utils
     combined_cc_dir_full = File.expand_path(combined_cc_dir, Dir.pwd)
     file_count = 0
     data_dir = "data"
+
     Utils::create_dir_if_needed(combined_cc_dir)
 
     dirs = Dir.entries(data_dir).keep_if{|i| i =~ /^images-license-\w/}
     dirs.map! {|dir| File.expand_path(dir, File.join(Dir.pwd, data_dir))}
-
-    puts dirs
 
     dirs.each do |dir|
       files = Dir.glob("#{dir}/*.{yml,jpg,jpeg}")
