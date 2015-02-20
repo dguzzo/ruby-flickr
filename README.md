@@ -3,6 +3,13 @@ ruby-flickr
 
 use [FlickRaw](http://hanklords.github.io/flickraw/) gem to access Flickr API
 
+# Config
+
+TODO
+* obtain Flickr API key and secret
+* place them in config/ruby-flickr-settings.yml
+TODO
+
 # Running
 
 ```bash
