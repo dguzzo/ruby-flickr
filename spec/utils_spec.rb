@@ -9,7 +9,6 @@ describe "utils_spec" do
     end
 
     it "sanitizes properly" do
-      #testing a private method
       expect(Utils::sanitize_filename("something with spaces")).to eq("something_with_spaces")
       expect(Utils::sanitize_filename("something_with_underscores")).to eq("something_with_underscores")
       expect(Utils::sanitize_filename("something-with-dashes")).to eq("something-with-dashes")
@@ -17,6 +16,11 @@ describe "utils_spec" do
       expect(Utils::sanitize_filename("something/with/slashes")).to eq("something_with_slashes")
       expect(Utils::sanitize_filename("something/with//slashes.and.others")).to eq("something_with__slashes.and.others")
       expect(Utils::sanitize_filename("something@with!stuff")).to eq("something_with_stuff")
+
+      expect(Utils::sanitize_filename("_something")).to eq("_something")
+      expect(Utils::sanitize_filename("'something")).to eq("_something")
+      expect(Utils::sanitize_filename("$@something")).to eq("__something")
+      expect(Utils::sanitize_filename("*something")).to eq("_something")
     end
 
     it "returns a canned title for a bad filename" do
