@@ -15,6 +15,7 @@ describe "utils_spec" do
       expect(Utils::sanitize_filename("something with an extension.jpg")).to eq("something_with_an_extension.jpg")
       expect(Utils::sanitize_filename("something/with/slashes")).to eq("something_with_slashes")
       expect(Utils::sanitize_filename("something/with//slashes.and.others")).to eq("something_with__slashes.and.others")
+      expect(Utils::sanitize_filename("something\with\\backslashes.and.others")).to eq("something\with\\backslashes.and.others")
       expect(Utils::sanitize_filename("something@with!stuff")).to eq("something_with_stuff")
 
       expect(Utils::sanitize_filename("_something")).to eq("_something")
