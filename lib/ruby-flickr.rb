@@ -31,9 +31,9 @@ LICENSE_TEXT = {
     8 => "United States Government Work",
 }.freeze
 
-PER_PAGE = 10
-
 module RubyFlickr
+  PER_PAGE = 10
+  
   class API
     attr_reader :token, :login
 
