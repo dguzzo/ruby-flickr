@@ -137,7 +137,7 @@ module RubyFlickr
     def set_local_auth
       flickr.access_token = Settings.authentication[:token][:access_token]
       flickr.access_secret = Settings.authentication[:token][:access_secret]
-      flickr.access_token && flickr.access_secret
+      
       begin
         @login = flickr.test.login
         puts "You are now authenticated as #{Utils::ColorPrint::green(@login.username)} with token #{flickr.access_token} and secret #{flickr.access_secret}"
@@ -149,7 +149,9 @@ module RubyFlickr
     def set_basic_auth
       FlickRaw.api_key = Settings.authentication[:api_key]
       FlickRaw.shared_secret = Settings.authentication[:shared_secret]
-      FlickRaw.api_key && FlickRaw.shared_secret
+      
+      raise "api_key not set!" unless FlickRaw.api_key
+      raise "shared_secret not set!" unless FlickRaw.shared_secret
     end
 
     def ask_to_open(id)

@@ -17,18 +17,14 @@ describe "ruby_flickr" do
       expect(FlickRaw.shared_secret).to eq('fake-shared-secret')
     end
 
-    it "doesn't set FlickRaw.shared_secret if not present in Settings" do
+    it "raises if shared_secret is not present in Settings" do
       allow(Settings).to receive_messages(:authentication => {:api_key => 'fake-api-key'})
-      flickraw_basic = RubyFlickr::API.new
-      expect(FlickRaw.api_key).to eq('fake-api-key')
-      expect(FlickRaw.shared_secret).to be_nil
+      expect{RubyFlickr::API.new}.to raise_error("shared_secret not set!")
     end
 
-    it "doesn't set FlickRaw.api_key if not present in Settings" do
+    it "raises if api_key is not present in Settings" do
       allow(Settings).to receive_messages(:authentication => {:shared_secret => 'fake-shared-secret'})
-      flickraw_basic = RubyFlickr::API.new
-      expect(FlickRaw.shared_secret).to eq('fake-shared-secret')
-      expect(FlickRaw.api_key).to be_nil
+      expect{RubyFlickr::API.new}.to raise_error("api_key not set!")
     end
   end
 
