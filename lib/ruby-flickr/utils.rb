@@ -92,6 +92,7 @@ module Utils
         "flickr_title" => photo.title,
         "flickr_title_photo_page" => "#{photo.title} - #{photo.urls.first._content}",
         "username_profile_page" => photo.owner.username + " - http://www.flickr.com/photos/#{photo.owner.username}/",
+        "caption_link" => "#{photo.title} by #{photo.owner.realname || photo.owner.username} - #{photo.urls.first._content}"
       }
     }
   end
