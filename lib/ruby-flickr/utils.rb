@@ -43,7 +43,6 @@ module Utils
     image_dir_name
   end
 
-  # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
   def self.sanitize_filename(filename)
     if !filename.is_a?(String)
       badname = "bad-file-name"
@@ -53,6 +52,7 @@ module Utils
       return "untitled"
     end
 
+    # http://makandracards.com/makandra/1309-sanitize-filename-with-user-input
     filename.gsub(/[^0-9A-z.\-]/, '_')
   end
 

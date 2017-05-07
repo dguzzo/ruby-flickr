@@ -58,7 +58,7 @@ module RubyFlickr
 
       Utils::ColorPrint::cyan_out("getting #{per_page} public photos for user #{user.username} (#{user_id})")
 
-      public_photos = flickr.people.getPublicPhotos(user_id: user_id , extras: "url_o", per_page: per_page)
+      public_photos = flickr.people.getPublicPhotos(user_id: user_id, extras: "url_o", per_page: per_page)
       
       if public_photos.to_a.empty?
         puts "\nzero photos found in search; exiting."
