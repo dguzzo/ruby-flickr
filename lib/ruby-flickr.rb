@@ -6,19 +6,6 @@ require 'yaml'
 
 require 'ruby-flickr/utils'
 
-=begin
-  ## p flickr.photos.licenses.getInfo
-  All Rights Reserved - 0
-  Attribution License - 4
-  Attribution-NoDerivs License - 6
-  Attribution-NonCommercial-NoDerivs License - 3
-  Attribution-NonCommercial License - 2
-  Attribution-NonCommercial-ShareAlike License - 1
-  Attribution-ShareAlike License - 5
-  No known copyright restrictions - 7
-  United States Government Work - 8
-=end
-
 LICENSE_TEXT = {
     0 => "All Rights Reserved",
     4 => "Attribution License",
