@@ -3,24 +3,24 @@ require 'flickraw'
 require 'ruby-flickr'
 
 describe "getting photos" do
-  flickraw_basic = nil
+  ruby_flickr = nil
 
   before :each do
-    flickraw_basic = RubyFlickr::API.new
+    ruby_flickr = RubyFlickr::API.new
   end
 
   it "getting untagged photos sets local auth" do
-    allow(flickraw_basic).to receive_messages(set_local_auth: nil)
+    allow(ruby_flickr).to receive_messages(set_local_auth: nil)
     allow(flickr.photos).to receive_messages(getUntagged: nil) # stub flickraw's call to the flickr API
-    flickraw_basic.get_untagged
-    expect(flickraw_basic).to have_received(:set_local_auth)
+    ruby_flickr.get_untagged
+    expect(ruby_flickr).to have_received(:set_local_auth)
   end
   
   it "getting untagged photos doesn't raise an error if zero photos are returned" do
-    allow(flickraw_basic).to receive_messages(set_local_auth: nil)
+    allow(ruby_flickr).to receive_messages(set_local_auth: nil)
     allow(flickr.photos).to receive_messages(getUntagged: [])
-    expect {flickraw_basic.get_untagged}.to_not raise_error
-    expect(flickraw_basic.get_untagged).to eq(0)
+    expect {ruby_flickr.get_untagged}.to_not raise_error
+    expect(ruby_flickr.get_untagged).to eq(0)
   end
 
   it "getting untagged photos returns count of files found" do
@@ -39,9 +39,9 @@ describe "getting photos" do
       sample_photo_2]]
     
     sample_response = FlickRaw::ResponseList.new(*DATA)
-    allow(flickraw_basic).to receive_messages(set_local_auth: nil)
+    allow(ruby_flickr).to receive_messages(set_local_auth: nil)
     allow(flickr.photos).to receive_messages(getUntagged: sample_response)
-    temp = flickraw_basic.get_untagged
+    temp = ruby_flickr.get_untagged
     expect(temp).to eq(2)
   end
 end

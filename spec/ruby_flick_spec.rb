@@ -4,7 +4,7 @@ require 'ruby-flickr'
 
 describe "ruby_flickr" do
   describe "set_basic_auth" do
-    flickraw_basic = nil
+    ruby_flickr = nil
 
     before do
       allow(Settings).to receive_messages(load!: nil)
@@ -12,7 +12,7 @@ describe "ruby_flickr" do
 
     it "sets FlickRaw.api_key and FlickRaw.shared_secret" do
       allow(Settings).to receive_messages(authentication: {api_key: 'fake-api-key', shared_secret: "fake-shared-secret"})
-      flickraw_basic = RubyFlickr::API.new
+      ruby_flickr = RubyFlickr::API.new
       expect(FlickRaw.api_key).to eq('fake-api-key')
       expect(FlickRaw.shared_secret).to eq('fake-shared-secret')
     end
@@ -31,7 +31,7 @@ describe "ruby_flickr" do
   describe "load_settings" do
     it "should call Settings.load!" do
       allow(Settings).to receive_messages(authentication: {api_key: 'fake-api-key', shared_secret: "fake-shared-secret"}, load!: nil)
-      flickraw_basic = RubyFlickr::API.new
+      ruby_flickr = RubyFlickr::API.new
       expect(Settings).to have_received(:load!)
     end
   end
