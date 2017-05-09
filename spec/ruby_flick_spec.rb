@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'flickraw'
 require 'ruby-flickr'
 
 describe "ruby_flickr" do

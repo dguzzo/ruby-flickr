@@ -10,9 +10,11 @@ Gem::Specification.new do |s|
   s.files = Dir['lib/**/*.rb', 'vendor/*.rb']
 
   s.add_dependency 'flickraw'
+  s.add_dependency 'httparty'
+  s.add_dependency 'webmock'
   # s.add_dependency 'dguzzo-utils' # sigh. http://stackoverflow.com/questions/11254066/gems-not-found-by-gem-list-when-using-bundle-install-for-git-gems-with-rvm?lq=1
 
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency 'pry'
+  s.add_development_dependency 'rspec', '3.0.0'
+  s.add_development_dependency 'pry', '0.10.0'
   s.add_development_dependency 'pry-nav'
 end
